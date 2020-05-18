@@ -5,15 +5,34 @@
 
 #include"Destination.hpp"
 
+unsigned startCapacity = 8;
+
 Destination::Destination()
 	:m_name(nullptr), m_numberOfVisits(0), m_sumOfAllEstimates(0)
+	,m_users(nullptr), m_numberOfUsers(0), m_capacityOfUsers(startCapacity)
 {
+	m_users = new(std::nothrow) User[m_capacityOfUsers];
+	if (m_users == nullptr) {
+		std::cout << "Not enought memory for users in destination constructor." << std::endl;
+		return;
+	}
+
 }
 
-Destination::Destination(char *name, unsigned number, unsigned sum)
+Destination::Destination(char *name, unsigned number, unsigned sum, User* users, unsigned numberOfUsers, unsigned capacityOfUsers)
 	:m_name(nullptr), m_numberOfVisits(number), m_sumOfAllEstimates(sum)
+	,m_users(nullptr), m_numberOfUsers(numberOfUsers), m_capacityOfUsers(capacityOfUsers)
 {
 	setName(name);
+
+	m_users = new(std::nothrow) User[m_capacityOfUsers];
+	if (m_users == nullptr) {
+		std::cout << "Not enought memory for users.Error!" << std::endl;
+		return;
+	}
+	for (int i = 0; i < m_numberOfUsers; ++i) {
+		m_users[i] = users[i];
+	}
 }
 
 Destination::Destination(const Destination &other)
@@ -97,6 +116,8 @@ void Destination::serialize(std::ofstream & ofs) const
 	ofs.write((const char*)& lenName, sizeof(lenName));
 	ofs.write(m_name, lenName);
 
+
+
 	/*if (ofs.good()) {
 		std::cout << "Successfully serialize" << std::endl;
 	}
@@ -133,10 +154,37 @@ void Destination::deserialize(std::ifstream & ifs)
 	}*/
 }
 
+void Destination::addUser(const User & newUser)
+{
+	if (m_numberOfUsers >= m_capacityOfUsers) {
+		resize();
+	}
+	m_users[m_numberOfUsers] = newUser;
+	++m_numberOfUsers;
+}
+
 void Destination::copy(const Destination &other)
 {
 	setName(other.m_name);
 	setNumberOfVisits(other.m_numberOfVisits);
 	setSumOfAll(other.m_sumOfAllEstimates);
 	//setAverage(other.m_average);
+}
+
+void Destination::resize()
+{
+	unsigned newCapacity = m_capacityOfUsers * 2;
+	User* newUsers = new (std::nothrow) User[newCapacity];
+
+	if (newUsers == nullptr) {
+		std::cout << "Not enought memory for resize! Error!" << std::endl;
+		return;
+	}
+
+	for (unsigned i = 0; i < m_capacityOfUsers; ++i) {
+		newUsers[i] = m_users[i];
+	}
+	m_capacityOfUsers = newCapacity;
+	delete[] m_users;
+	m_users = newUsers;
 }

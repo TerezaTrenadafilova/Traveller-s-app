@@ -2,6 +2,7 @@
 #define __DESTINATION_HPP
 
 #include<fstream>
+#include "User.hpp"
 
 class Destination {
 private:
@@ -10,10 +11,15 @@ private:
 	unsigned m_sumOfAllEstimates;
 	//double m_average;
 
+	//Всяка дестинация ще има списък с потребители, които са я посетили
+	User* m_users;
+	unsigned m_numberOfUsers;
+	unsigned m_capacityOfUsers;
+
 public:
 	//Голяма четворка.
 	Destination();
-	Destination(char*, unsigned, unsigned/*, double*/);
+	Destination(char*, unsigned, unsigned, User*, unsigned, unsigned);
 	Destination(const Destination&);
 	Destination& operator=(const Destination&);
 	~Destination();
@@ -34,9 +40,15 @@ public:
 
 	//Четене на информация от двоичен файл.
 	void deserialize(std::ifstream&);
+
+	//Добавяне на нов потребител
+	void addUser(const User&);
 private:
 	//Функция за копиране
 	void copy(const Destination&);
+
+	//Функция за преоразмеряване
+	void resize();
 };
 
 #endif
