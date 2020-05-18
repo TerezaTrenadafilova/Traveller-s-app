@@ -39,14 +39,54 @@ Photo::~Photo()
 
 void Photo::setPhoto(char * namePhoto)
 {
-	//Направи валидация на името на снимката.
+	//Валидация на името на снимката.
 	unsigned lenNamePhoto = strlen(namePhoto);
-	m_name = new(std::nothrow) char[lenNamePhoto + 1];
-	if (m_name == nullptr) {
-		std::cout << "Not enought memory for set name of photo. Error!" << std::endl;
+	unsigned pointPosition = 0;
+	unsigned counter = 0;
+
+	//Запазване името на снимката в променлива, защото след while цикъла няа да работи.
+	char* photo = new(std::nothrow) char[lenNamePhoto + 1];
+	if (photo == nullptr) {
+		std::cout << "Not enought memory for photo. Error!" << std::endl;
 		return;
 	}
-	strcpy(m_name, namePhoto);
+	strcpy(photo, namePhoto);
+
+	while (*photo != '\0') {
+		if (*photo == '.') {
+			pointPosition = counter;
+		}
+		++counter;
+		++photo;
+	}
+	std::cout << "test putput of namePhoto: " << namePhoto << std::endl;
+	unsigned lenExtention = lenNamePhoto - pointPosition;
+	
+	char* ext = new(std::nothrow) char[lenExtention];
+	if (ext == nullptr) {
+		std::cout << "Not enought memory for extention. Error!" << std::endl;
+		return;
+	}
+	for (int i = 0; i < lenExtention;++i) {
+		ext[i] = namePhoto[i + pointPosition+1];
+	}
+	std::cout << "Extention is: " << ext << std::endl;
+
+	//ПРоверка дали разширението на файла е от разлрешените.
+	if (strcmp(ext, EXTENSION_1) == 0 || strcmp(ext, EXTENSION_2) == 0) {
+		m_name = new(std::nothrow) char[lenNamePhoto + 1];
+		if (m_name == nullptr) {
+			std::cout << "Not enought memory for set name of photo. Error!" << std::endl;
+			return;
+		}
+		strcpy(m_name, namePhoto);
+	}
+	else {
+		std::cout << "Invalid extesion." << std::endl;
+		m_name = nullptr;
+	}
+	//delete[] photo;
+	
 
 }
 
