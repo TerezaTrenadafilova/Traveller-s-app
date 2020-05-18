@@ -46,7 +46,7 @@ Destination::Destination(const Destination &other)
 Destination & Destination::operator=(const Destination &other)
 {
 	if (this != &other) {
-		delete[] m_name;
+		cleanMemory();
 		copy(other);
 	}
 	return *this;
@@ -54,7 +54,7 @@ Destination & Destination::operator=(const Destination &other)
 
 Destination::~Destination()
 {
-	delete[] m_name;
+	cleanMemory();
 }
 
 void Destination::setName(char *name)
@@ -168,7 +168,29 @@ void Destination::copy(const Destination &other)
 	setName(other.m_name);
 	setNumberOfVisits(other.m_numberOfVisits);
 	setSumOfAll(other.m_sumOfAllEstimates);
+
+	delete[]m_users;
+	m_users = new(std::nothrow) User[other.m_capacityOfUsers];
+	if (m_users = nullptr) {
+		std::cout << "Not enought memory for set user list. Error!" << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < other.m_numberOfUsers; ++i) {
+		m_users[i] = other.m_users[i];
+	}
+	m_capacityOfUsers = other.m_capacityOfUsers;
+	m_numberOfUsers = other.m_numberOfUsers;
 	//setAverage(other.m_average);
+}
+
+void Destination::cleanMemory()
+{
+	delete[]m_name;
+	m_name = nullptr;
+
+	delete[] m_users;
+	m_users = nullptr;
 }
 
 void Destination::resize()

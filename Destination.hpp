@@ -47,6 +47,9 @@ private:
 	//Функция за копиране
 	void copy(const Destination&);
 
+	//Функция за изтриване на паметта.
+	void cleanMemory();
+
 	//Функция за преоразмеряване
 	void resize();
 };
