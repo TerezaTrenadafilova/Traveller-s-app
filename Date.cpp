@@ -21,57 +21,67 @@ bool Date::isLeapYear(unsigned year)
 
 Date::Date(unsigned day, unsigned month, unsigned year)
 {
-	
-	setDay(day);
-	setMonth(month);
+	//Първо инициялизираме годината, след това месеца и накрая деня, за да може да направим валидация за деня.
 	setYear(year);
+	setMonth(month);
+	setDay(day);
+	
 }
 
 void Date::setDay(unsigned day)
 {
-	//if (m_month == 1 || m_month == 3 || m_month == 5 || m_month == 7 || m_month == 8 || m_month == 10 || m_month == 12) {
-	//	if (day == 0 || day > NUMBER_DAYS_FULL_MONTH) {
-	//		std::cout << "Invalid date." << std::endl;
-	//		return;
-	//	}
-	//	else {
-	//		m_day = day;
-	//	}
-	//}
+	if (m_month == 1 || m_month == 3 || m_month == 5 || m_month == 7 || m_month == 8 || m_month == 10 || m_month == 12) {
+		if (day == 0 || day > NUMBER_DAYS_FULL_MONTH) {
+			std::cout << "Invalid date. " ;
+			std::cout << "Program will set date of 31th. If you not agree, try again." << std::endl;
+			m_day = NUMBER_DAYS_FULL_MONTH;
+			return;
+		}
+		else {
+			m_day = day;
+		}
+	}
 
-	////Ако месецът е февруари.
-	//if (m_month == 2) {
-	//	//Проверка дали годината е високосна.
-	//	if (isLeapYear(m_year) == true) {
-	//		if (day == 0 || day > NUMBER_OF_DAYS_FEBR + 1) {
-	//			std::cout << "Invalid date." << std::endl;
-	//			return;
-	//		}
-	//		else {
-	//			m_day = day;
-	//		}
-	//	}
-	//	else {
-	//		if (day == 0 || day > NUMBER_OF_DAYS_FEBR) {
-	//			std::cout << "Invalid date." << std::endl;
-	//			return;
-	//		}
-	//		else {
-	//			m_day = day;
-	//		}
-	//	}
-	//}
+	//Ако месецът е февруари.
+	if (m_month == 2) {
+		
+		//Проверка дали годината е високосна.
+		if (isLeapYear(m_year) == true) {
+			if (day == 0 || day > NUMBER_OF_DAYS_FEBR + 1) {
+				std::cout << "Invalid date. " ;
+				std::cout << "Program will set date of 29th. If you not agree, try again." << std::endl;
+				m_day = NUMBER_OF_DAYS_FEBR + 1;
+				return;
+			}
+			else {
+				m_day = day;
+			}
+		}
+		else {
+			if (day == 0 || day > NUMBER_OF_DAYS_FEBR) {
+				std::cout << "Invalid date. ";
+				std::cout << "Program will set date of 28th. If you not agree, try again." << std::endl;
+				m_day = NUMBER_OF_DAYS_FEBR;
+				return;
+			}
+			else {
+				m_day = day;
+			}
+		}
+	}
 
-	//if (m_month == 4 || m_month == 6 || m_month == 9 || m_month == 11) {
-	//	if (day == 0 || day > NUMBER_OF_DAYS_ANOTHER_MONTH) {
-	//		std::cout << "Invalid date." << std::endl;
-	//		return;
-	//	}
-	//	else {
-	//		m_day = day;
-	//	}
-	//}
-	m_day = day;
+	if (m_month == 4 || m_month == 6 || m_month == 9 || m_month == 11) {
+		if (day == 0 || day > NUMBER_OF_DAYS_ANOTHER_MONTH) {
+			std::cout << "Invalid date. ";
+			std::cout<< "Program will set date of 30th. If you not agree, try again." << std::endl;
+			m_day = NUMBER_OF_DAYS_ANOTHER_MONTH;
+			return;
+		}
+		else {
+			m_day = day;
+		}
+	}
+	/*m_day = day;*/
 
 }
 
