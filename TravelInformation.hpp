@@ -58,7 +58,7 @@ public:
 	void setPhotos(Photo* );
 
 	//Селектори.
-	//char* getDestination()const;
+	char* getDestination()const;
 	unsigned getEvaluation() const;
 	char* getComment() const;
 	//char** getPhotos() const;

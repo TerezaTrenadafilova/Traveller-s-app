@@ -30,6 +30,9 @@ void testDate() {
 	date3.printDate();
 
 	ifs.close();
+
+	Date d1(29, 2, 2019);
+	std::cout << d1.getDay() << "/" << d1.getMonth() << "/" << d1.getYear() << std::endl;
 }
 
 void testDestination() {
@@ -66,6 +69,13 @@ void testTravelInfo() {
 	Photo* p1 = new(std::nothrow) Photo[1];
 	p1->setPhoto("myPhoto.jpeg");
 	TravelInformation t1(destination, d1, d2, eval, comment, p1, 1, 2);
+	destination.setNumberOfVisits(destination.getNumberOfVisits() + 1);
+	destination.setSumOfAll(destination.getSumOfALL() + eval);
+	std::cout << "Print info: " << std::endl;
+	t1.print();
+	std::cout << "Destination: " << destination.getAverage() << ", " << destination.getNumberOfVisits() << ", " << destination.getSumOfALL() << std::endl;
+	std::cout << std::endl;
+	
 	std::ofstream ofs("travelInfo.bin", std::ios::out | std::ios::binary);
 	t1.serialize(ofs);
 	ofs.close();
@@ -90,161 +100,168 @@ void testPhoto() {
 	p1.deserialize(ifs);
 	std::cout << "Photo name is: " << p1.getPhoto() << std::endl;
 
+	Photo p2("img.jpeg");
+	std::cout << p2.getPhoto() << std::endl;
+
 }
 
 int main() {
 
-	std::ofstream ofs("users.bin", std::ios::binary| std::ios::out|std::ios::trunc);
+	//std::ofstream ofs("users.bin", std::ios::binary| std::ios::out|std::ios::trunc);
 
-	if (!ofs.is_open()) {
-		std::cout << "File can not to open!" << std::endl;
-		return 1;
-	}
+	//if (!ofs.is_open()) {
+	//	std::cout << "File can not to open!" << std::endl;
+	//	return 1;
+	//}
 
-	unsigned countUser = 2;
-	
-	//В началото на файла файла, който пази иформацията за потребителите, записваме брой на потребителите.
-	ofs.write((const char*)& countUser, sizeof(countUser));
+	//unsigned countUser = 2;
+	//
+	////В началото на файла файла, който пази иформацията за потребителите, записваме брой на потребителите.
+	//ofs.write((const char*)& countUser, sizeof(countUser));
 
-	const unsigned MAX_LEN = 100;
-	char name[MAX_LEN];
-	char pass[MAX_LEN];
-	char email[MAX_LEN];
+	//const unsigned MAX_LEN = 100;
+	//char name[MAX_LEN];
+	//char pass[MAX_LEN];
+	//char email[MAX_LEN];
 
-	std::cout << "Name: ";
-	std::cin.getline(name, MAX_LEN);
+	//std::cout << "Name: ";
+	//std::cin.getline(name, MAX_LEN);
 
-	std::cout << "Password: ";//<< std::endl;
-	std::cin.getline(pass, MAX_LEN);
+	//std::cout << "Password: ";//<< std::endl;
+	//std::cin.getline(pass, MAX_LEN);
 
-	std::cout << "Email: ";//<< std::endl;
-	std::cin.getline(email, MAX_LEN);
+	//std::cout << "Email: ";//<< std::endl;
+	//std::cin.getline(email, MAX_LEN);
 
-	User u(name, pass, email);
-	u.serializeUsersDatabase(ofs);
-	User u1("Ana Simeonova", "12345", "an@abv.bg");
-	u1.serializeUsersDatabase(ofs);
-	ofs.close();
+	//User u(name, pass, email);
+	//u.serializeUsersDatabase(ofs);
+	//User u1("Ana Simeonova", "12345", "an@abv.bg");
+	//u1.serializeUsersDatabase(ofs);
+	//ofs.close();
 
-	std::ifstream ifs("users.bin", std::ios::binary);
-	//Първо прочита броят на потребителите.
-	unsigned sizeOfArr;
-	ifs.read((char*)& sizeOfArr, sizeof(sizeOfArr));
+	//std::ifstream ifs("users.bin", std::ios::binary);
+	////Първо прочита броят на потребителите.
+	//unsigned sizeOfArr;
+	//ifs.read((char*)& sizeOfArr, sizeof(sizeOfArr));
 
-	User *usersInfo= new (std::nothrow) User[sizeOfArr];
-	if (usersInfo == nullptr) {
-		std::cout << "Not enought memory for usersInfo! Error!" << std::endl;
-		return 1;
-	}
-	for (int i = 0; i < sizeOfArr; ++i) {
-		usersInfo[i].deserializeUsersDatabase(ifs);
-	}
-	ifs.close();
+	//User *usersInfo= new (std::nothrow) User[sizeOfArr];
+	//if (usersInfo == nullptr) {
+	//	std::cout << "Not enought memory for usersInfo! Error!" << std::endl;
+	//	return 1;
+	//}
+	//for (int i = 0; i < sizeOfArr; ++i) {
+	//	usersInfo[i].deserializeUsersDatabase(ifs);
+	//}
+	//ifs.close();
 
-	std::cout << "Do you have registration?[y/n]" << std::endl;
-	char userAnswer;
-	std::cin >> userAnswer;
+	//std::cout << "Do you have registration?[y/n]" << std::endl;
+	//char userAnswer;
+	//std::cin >> userAnswer;
 
-	//Ако потребителят има вече регистрация.
-	if (userAnswer == 'y' || userAnswer == 'Y') {//Работи успешно, без направената лична база данни.
-		std::cout << "User name: ";
-		
-		//За да работи правилно cin.getline()
-		char c;
-		std::cin.get(c);
+	////Ако потребителят има вече регистрация.
+	//if (userAnswer == 'y' || userAnswer == 'Y') {//Работи успешно, без направената лична база данни.
+	//	std::cout << "User name: ";
+	//	
+	//	//За да работи правилно cin.getline()
+	//	char c;
+	//	std::cin.get(c);
 
-		std::cin.getline(name, MAX_LEN);
+	//	std::cin.getline(name, MAX_LEN);
 
-		std::cout << "Password: ";
-		std::cin.getline(pass, MAX_LEN);
+	//	std::cout << "Password: ";
+	//	std::cin.getline(pass, MAX_LEN);
 
-		bool isUser=false;
-		for (int i = 0; i < sizeOfArr; ++i) {
-			if (strcmp(usersInfo[i].getUserName(), name) == 0) {
-				if (strcmp(usersInfo[i].getPassword(), pass) == 0) {
-					//Отвaране на личната база данни за този потребител.
-					std::cout << "You log in as " << name << std::endl;
-					isUser = true;
-				
-				}
-			}
-		}
-		if (isUser == false) {
-			std::cout << "Invalid user name/ password." << std::endl;
-		}
+	//	bool isUser=false;
+	//	for (int i = 0; i < sizeOfArr; ++i) {
+	//		if (strcmp(usersInfo[i].getUserName(), name) == 0) {
+	//			if (strcmp(usersInfo[i].getPassword(), pass) == 0) {
+	//				//Отвaране на личната база данни за този потребител.
+	//				std::cout << "You log in as " << name << std::endl;
+	//				isUser = true;
+	//			
+	//			}
+	//		}
+	//	}
+	//	if (isUser == false) {
+	//		std::cout << "Invalid user name/ password." << std::endl;
+	//	}
 
-	}
+	//}
 
-	//Ако потребителя иска да се регистрира
-	if (userAnswer == 'n' || userAnswer == 'N') {
-		std::cout << "User name: ";
+	////Ако потребителя иска да се регистрира
+	//if (userAnswer == 'n' || userAnswer == 'N') {
+	//	std::cout << "User name: ";
 
-		//За да работи правилно cin.getline()
-		char c;
-		std::cin.get(c);
+	//	//За да работи правилно cin.getline()
+	//	char c;
+	//	std::cin.get(c);
 
-		std::cin.getline(name, MAX_LEN);
+	//	std::cin.getline(name, MAX_LEN);
 
-		std::cout << "Password: ";
-		std::cin.getline(pass, MAX_LEN);
+	//	std::cout << "Password: ";
+	//	std::cin.getline(pass, MAX_LEN);
 
-		std::cout << "Email: ";
-		std::cin.getline(email, MAX_LEN);
+	//	std::cout << "Email: ";
+	//	std::cin.getline(email, MAX_LEN);
 
-		//Създаване на нов потребител в системата.
-		User newUser(name, pass, email);
-		ofs.open("users.bin", std::ios::binary | std::ios::out | std::ios::app);
-		
-		sizeOfArr += 1;//Увеличаваме броят на потребителите.
-		ofs.write((const char*)& sizeOfArr, sizeof(sizeOfArr));
-		
-		//Тук не работи правилно. Трябва да го поправя. Помисли как!
-		for (int i = 0; i < sizeOfArr; ++i) {
-			usersInfo[i].deserializeUsersDatabase(ifs);//Записваме наново всички потребители до сега.
-		}
-		newUser.serializeUsersDatabase(ofs);//в края добавяме новият регистриран потребител.
+	//	//Създаване на нов потребител в системата.
+	//	User newUser(name, pass, email);
+	//	ofs.open("users.bin", std::ios::binary | std::ios::out | std::ios::app);
+	//	
+	//	sizeOfArr += 1;//Увеличаваме броят на потребителите.
+	//	ofs.write((const char*)& sizeOfArr, sizeof(sizeOfArr));
+	//	
+	//	//Тук не работи правилно. Трябва да го поправя. Помисли как!
+	//	for (int i = 0; i < sizeOfArr; ++i) {
+	//		usersInfo[i].deserializeUsersDatabase(ifs);//Записваме наново всички потребители до сега.
+	//	}
+	//	newUser.serializeUsersDatabase(ofs);//в края добавяме новият регистриран потребител.
 
-		ofs.close();
-		char nameFile[MAX_LEN];
-		strcpy(nameFile, name);
-		strcat(nameFile, ".db");
+	//	ofs.close();
+	//	char nameFile[MAX_LEN];
+	//	strcpy(nameFile, name);
+	//	strcat(nameFile, ".db");
 
-		//Отваряне на личната база данни.
-		//std::ifstream ifs(nameFile, std::ios::in | std::ios::binary);
-		//Работа с информацията, която потребителя ни подава.
-	}
+	//	//Отваряне на личната база данни.
+	//	//std::ifstream ifs(nameFile, std::ios::in | std::ios::binary);
+	//	//Работа с информацията, която потребителя ни подава.
+	//}
 
 
 
-	//Трябва да прочетем отново информацията от файла.
-	ifs.open("users.bin", std::ios::binary);
-	unsigned size = 0;
-	//Прочитаме броя на потребителите.
-	ifs.read((char*)&size, sizeof(size));
-	User* newUsers = new(std::nothrow) User[size];
-	if (newUsers == nullptr) {
-		std::cout << "Error" << std::endl;
-		return 1;
-	}
-	
-	for (int i = 0; i < size; ++i) {
-		newUsers[i].deserializeUsersDatabase(ifs);
-	}
-	ifs.close();
+	////Трябва да прочетем отново информацията от файла.
+	//ifs.open("users.bin", std::ios::binary);
+	//unsigned size = 0;
+	////Прочитаме броя на потребителите.
+	//ifs.read((char*)&size, sizeof(size));
+	//User* newUsers = new(std::nothrow) User[size];
+	//if (newUsers == nullptr) {
+	//	std::cout << "Error" << std::endl;
+	//	return 1;
+	//}
+	//
+	//for (int i = 0; i < size; ++i) {
+	//	newUsers[i].deserializeUsersDatabase(ifs);
+	//}
+	//ifs.close();
 
-	std::cout << "Print users information: " << size<< std::endl;
-	for (int i = 0; i < size; ++i) {
-		newUsers[i].printInformation();
-	}
+	//std::cout << "Print users information: " << size<< std::endl;
+	//for (int i = 0; i < size; ++i) {
+	//	newUsers[i].printInformation();
+	//}
 
-	ifs.close();
+	//ifs.close();
 
-	//Изтриване на заделената памет.
-	for (int i = 0; i < size; ++i) {
-		delete[] newUsers;
-	}
-	delete[] newUsers;
-	
-	
+	////Изтриване на заделената памет.
+	//for (int i = 0; i < size; ++i) {
+	//	delete[] newUsers;
+	//}
+	//delete[] newUsers;
+	//
+	//
+
+testTravelInfo();
+	system("pause");
+
 	return 0;
 }

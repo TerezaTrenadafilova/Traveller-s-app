@@ -51,6 +51,9 @@ private:
 	void setPassword(char*);
 	void setEmail(char*);
 
+	//Преоразмеряване на списъка с приятели.
+	void resizeFriendList();
+	void resizeTravelInfo();
 
 public:
 	//void freeMemory(User& );
@@ -68,6 +71,7 @@ public:
 	char* getEmail() const;
 	unsigned getNumberOfFriends() const;
 	unsigned getCapacityOfFriends()const;
+	unsigned getNumberOfTravels()const;
 
 	//Записване на потребител в база данните с потребител.
 	void serializeUsersDatabase(std::ofstream &)const;
@@ -81,7 +85,33 @@ public:
 	//Четене от личната база данни.
 	void deserializePersonalDataBase(std::ifstream&);
 
+	//Проверка дали потребител с дадено име е приятел.
+	bool isFriend(char*);
+
+	//Извежда информацията за потребителя.
 	void printInformation()const;
+
+	//Извежда информацията за пътуванията на потребителя.
+	void printTravelInformation()const;
+
+	//Проверява дали дестинация с дадено име е посетена от потребителя.
+	bool isVisitDestination(char*);
+
+	//Изваежда информация за дестинация с дадено име.
+	void printDestinationInfoByName(char*)const;
+
+	//Извежда оценката на потребителя за дестинация с дадено име.
+	void prinDestinationEvaluation(char*) const;
+
+	//Функция за добавяне на приятел.
+	void addFriend(const User &);
+
+	//Функция за премахване на приятел.
+	void removeFriend(const User&);
+
+	//Добавяне на нова дестинация.
+	void addNewTravel(const TravelInformation&);
+
 };
 
 #endif

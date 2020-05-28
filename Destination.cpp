@@ -5,7 +5,6 @@
 
 #include"Destination.hpp"
 
-unsigned startCapacity = 8;
 
 Destination::Destination()
 	:m_name(nullptr), m_numberOfVisits(0), m_sumOfAllEstimates(0)
@@ -161,6 +160,16 @@ void Destination::addUser(const User & newUser)
 	}
 	m_users[m_numberOfUsers] = newUser;
 	++m_numberOfUsers;
+}
+
+void Destination::printUserWhoVisitedDestination() const
+{
+	std::cout << std::endl << "List of users who have visited " << m_name << ": " << std::endl;
+	for (int i = 0; i < m_numberOfUsers; ++i) {
+		std::cout << m_users[i].getUserName() << ",  ";
+		m_users[i].prinDestinationEvaluation(m_name);
+	}
+	std::cout << "Average evaluation: " << getAverage() << std::endl << std::endl;
 }
 
 void Destination::copy(const Destination &other)

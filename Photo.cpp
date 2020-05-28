@@ -44,7 +44,7 @@ void Photo::setPhoto(char * namePhoto)
 	unsigned pointPosition = 0;
 	unsigned counter = 0;
 
-	//Запазване името на снимката в променлива, защото след while цикъла няа да работи.
+	//Запазване името на снимката в променлива, защото след while цикъла няма да работи.
 	char* photo = new(std::nothrow) char[lenNamePhoto + 1];
 	if (photo == nullptr) {
 		std::cout << "Not enought memory for photo. Error!" << std::endl;
@@ -52,6 +52,7 @@ void Photo::setPhoto(char * namePhoto)
 	}
 	strcpy(photo, namePhoto);
 
+	//Намиране позицията на точката в името на файла, за да проверим дали разширението е едно от двете позволени.
 	while (*photo != '\0') {
 		if (*photo == '.') {
 			pointPosition = counter;
@@ -59,7 +60,8 @@ void Photo::setPhoto(char * namePhoto)
 		++counter;
 		++photo;
 	}
-	std::cout << "test putput of namePhoto: " << namePhoto << std::endl;
+	
+	//Намиране дължината на разширението.
 	unsigned lenExtention = lenNamePhoto - pointPosition;
 	
 	char* ext = new(std::nothrow) char[lenExtention];
@@ -70,9 +72,10 @@ void Photo::setPhoto(char * namePhoto)
 	for (int i = 0; i < lenExtention;++i) {
 		ext[i] = namePhoto[i + pointPosition+1];
 	}
-	std::cout << "Extention is: " << ext << std::endl;
 
-	//ПРоверка дали разширението на файла е от разлрешените.
+	//Проверка дали името е коректно.
+
+	//ПРоверка дали разширението на файла е от разрешените.
 	if (strcmp(ext, EXTENSION_1) == 0 || strcmp(ext, EXTENSION_2) == 0) {
 		m_name = new(std::nothrow) char[lenNamePhoto + 1];
 		if (m_name == nullptr) {

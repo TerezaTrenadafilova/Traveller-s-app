@@ -41,16 +41,19 @@ TravelInformation::TravelInformation(Destination destination, Date arrival, Date
 	m_dateOfArrival = arrival;
 	m_dateOfDeparture = departure;
 	
-	//Увеличавеме брой на пътуванията за дадена дестинация.
-	destination.setNumberOfVisits(destination.getNumberOfVisits() + 1);
+	//Тази част с проманната на данните за дестинацията ще е локална. За това трябва да се изнесе извън конструктора.
 
-	//Промяна на общия брой посещения.
-	unsigned numberVisit = destination.getNumberOfVisits() + 1;
-	destination.setNumberOfVisits(numberVisit);
-
-	//Промяна на сумата от всички оценки на дестинацията.
-	unsigned sumAll = destination.getSumOfALL() + m_evaluation;
-	destination.setSumOfAll(sumAll);
+	////Промяна на общия брой посещения.
+	//unsigned numberVisit = destination.getNumberOfVisits() + 1;
+	//destination.setNumberOfVisits(numberVisit);
+	//m_destination.setNumberOfVisits(numberVisit);
+	//std::cout << "destination number of visits in TI constr: " << destination.getNumberOfVisits() << std::endl;
+	//
+	////Промяна на сумата от всички оценки на дестинацията.
+	//unsigned sumAll = destination.getSumOfALL() + m_evaluation;
+	//destination.setSumOfAll(sumAll);
+	//m_destination.setSumOfAll(sumAll);
+	//std::cout << "destination sumOfAll in TI constr: " << destination.getSumOfALL() << std::endl;
 	
 	setComment(comment);
 	setPhotos(photos);
@@ -101,15 +104,12 @@ void TravelInformation::copy(const TravelInformation & other)
 
 void TravelInformation::clean()
 {
-
-
 	delete[] m_comment;
 	m_comment = nullptr;
 
 	delete[] m_photos;
 	m_photos = nullptr;
 
-	//Изтриване на паметта за снимките.
 }
 
 void TravelInformation::resize(unsigned newCapacity)
@@ -180,12 +180,6 @@ void TravelInformation::setComment(char * comment)
 
 void TravelInformation::setDateOfArrival( const Date& date)
 {
-	/*m_dateOfArrival = new(std::nothrow) Date;
-	if (m_dateOfArrival == nullptr) {
-		std::cout << "Not enought memory for date of arrival. Error!" << std::endl;
-		return;
-	}*/
-
 	if (date.getYear() <= m_dateOfDeparture.getYear() && date.getMonth() <= m_dateOfDeparture.getMonth()&& date.getDay() <= m_dateOfDeparture.getDay()) {
 		m_dateOfArrival = date;
 	}
@@ -194,7 +188,6 @@ void TravelInformation::setDateOfArrival( const Date& date)
 		return;
 	}
 
-	
 }
 
 void TravelInformation::setDeteOfDeparture(const Date& date)
@@ -209,7 +202,7 @@ void TravelInformation::setDeteOfDeparture(const Date& date)
 		m_dateOfDeparture = date;
 	}
 	else {
-		std::cout << "Invalid date of arrival! " << std::endl;
+		std::cout << "Invalid date of departure! " << std::endl;
 		return;
 	}
 }
@@ -231,10 +224,10 @@ void TravelInformation::setPhotos(Photo * photo)
 //	//TODO work;
 //}
 
-//char * TravelInformation::getDestination() const
-//{
-//	return m_destination;
-//}
+char * TravelInformation::getDestination() const
+{
+	return m_destination.getDestination();
+}
 
 unsigned TravelInformation::getEvaluation() const
 {
@@ -268,12 +261,12 @@ void TravelInformation::serialize(std::ofstream &ofs) const
 		m_photos[i].serialize(ofs);
 	}
 
-	if (ofs.good()) {
+	/*if (ofs.good()) {
 		std::cout << "Successffuly serialize of travel information." << std::endl;
 	}
 	else {
 		std::cout << "Serialize of travel information failed. " << std::endl;
-	}
+	}*/
 }
 
 void TravelInformation::deserialize(std::ifstream & ifs)
@@ -313,12 +306,12 @@ void TravelInformation::deserialize(std::ifstream & ifs)
 		m_photos[i].deserialize(ifs);
 	}
 
-	if (ifs.good()) {
-		std::cout << "Successffuly deserialize." << std::endl;
-	}
-	else {
-		std::cout << "Deserialize failed." << std::endl;
-	}
+	//if (ifs.good()) {
+	//	std::cout << "Successffuly deserialize." << std::endl;
+	//}
+	//else {
+	//	std::cout << "Deserialize failed." << std::endl;
+	//}
 }
 
 void TravelInformation::addPhoto(const Photo & photo)

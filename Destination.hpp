@@ -4,6 +4,8 @@
 #include<fstream>
 #include "User.hpp"
 
+const unsigned startCapacity = 8;
+
 class Destination {
 private:
 	char* m_name;
@@ -19,7 +21,8 @@ private:
 public:
 	//Голяма четворка.
 	Destination();
-	Destination(char*, unsigned, unsigned, User*, unsigned, unsigned);
+	Destination(char*, unsigned, unsigned=0, User* =nullptr, unsigned = 0, unsigned = startCapacity);
+	//Destination(char*, unsigned, unsigned, User*, unsigned, unsigned);
 	Destination(const Destination&);
 	Destination& operator=(const Destination&);
 	~Destination();
@@ -43,6 +46,10 @@ public:
 
 	//Добавяне на нов потребител
 	void addUser(const User&);
+
+	//Извежда потребителите, които са посетели дестницията.
+	void printUserWhoVisitedDestination() const;
+
 private:
 	//Функция за копиране
 	void copy(const Destination&);

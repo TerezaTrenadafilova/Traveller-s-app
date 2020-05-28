@@ -124,7 +124,7 @@ unsigned Date::getYear() const
 
 void Date::printDate() const
 {
-	std::cout <<getDay() << '.' << getMonth() << '.' <<getYear() << std::endl;
+	std::cout <<getDay() << '.' << getMonth() << '.' <<getYear();
 
 }
 

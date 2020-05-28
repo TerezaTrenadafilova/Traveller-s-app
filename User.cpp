@@ -138,6 +138,42 @@ void User::setEmail(char * email)
 	strcpy(m_email, email);
 }
 
+void User::resizeFriendList()
+{
+	unsigned newCapacity = m_capacityFriends* 2;
+	User* newFr = new (std::nothrow) User[newCapacity];
+
+	if (newFr == nullptr) {
+		std::cout << "Not enought memory for resize friends list! Error!" << std::endl;
+		return;
+	}
+
+	for (unsigned i = 0; i < m_capacityFriends; ++i) {
+		newFr[i] = m_friendsList[i];
+	}
+	m_capacityFriends = newCapacity;
+	delete[] m_friendsList;
+	m_friendsList = newFr;
+}
+
+void User::resizeTravelInfo()
+{
+	unsigned newCapacity = m_capacityTravels * 2;
+	TravelInformation* newTravels = new (std::nothrow) TravelInformation[newCapacity];
+
+	if (newTravels == nullptr) {
+		std::cout << "Not enought memory for resize travels list! Error!" << std::endl;
+		return;
+	}
+
+	for (unsigned i = 0; i < m_capacityTravels; ++i) {
+		newTravels[i] = m_travels[i];
+	}
+	m_capacityTravels = newCapacity;
+	delete[] m_travels;
+	m_travels = newTravels;
+}
+
 //void User::freeMemory(User &u)
 //{
 //	if (u.m_userName != nullptr) {
@@ -211,6 +247,11 @@ unsigned User::getNumberOfFriends() const
 unsigned User::getCapacityOfFriends() const
 {
 	return m_capacityFriends;
+}
+
+unsigned User::getNumberOfTravels() const
+{
+	return m_countTravels;
 }
 
 void User::serializeUsersDatabase(std::ofstream & ofs) const
@@ -336,12 +377,98 @@ void User::deserializePersonalDataBase(std::ifstream & ifs)
 	}
 }
 
+bool User::isFriend(char * nameFriend)
+{
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		if (strcmp(m_friendsList[i].getUserName(), nameFriend) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void User::printInformation() const
 {
 	std::cout << "User name: " << m_userName << std::endl
-		<< "Password: " << m_password << std::endl
+		//<< "Password: " << m_password << std::endl
 		<< "Email: " << m_email << std::endl;
 }
+
+void User::printTravelInformation() const
+{
+	for (int i = 0; i < m_countTravels; ++i) {
+		m_travels[i].print();
+	}
+}
+
+bool User::isVisitDestination(char * dest)
+{
+	for (int i = 0; i < m_countTravels; ++i) {
+		if (strcmp(dest, m_travels[i].getDestination()) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void User::printDestinationInfoByName(char * name) const
+{
+	for (int i = 0; i < m_countTravels; ++i) {
+		if (strcmp(name, m_travels[i].getDestination()) == 0) {
+			m_travels[i].print();
+		}
+	}
+}
+
+void User::prinDestinationEvaluation(char *destinationName) const
+{
+	for (int i = 0; i < m_countTravels; ++i) {
+		if (strcmp(destinationName, m_travels[i].getDestination()) == 0) {
+			std::cout << m_travels[i].getEvaluation() << std::endl;
+		}
+	}
+}
+
+void User::addFriend(const User & newFriend)
+{
+	if (m_numberOfFriends >= m_capacityFriends) {
+		resizeFriendList();
+	}
+	m_friendsList[m_numberOfFriends] = newFriend;
+	++m_numberOfFriends;
+}
+
+void User::removeFriend(const User & adversary)
+{
+	int pos = -1;
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		if (strcmp(adversary.getUserName(), m_friendsList[i].getUserName()) == 0) {
+			pos = i;
+			break;
+		}
+	}
+
+	if (pos == -1) {
+		std::cout<<std::endl << adversary.getUserName() << " is not your friend." << std::endl << std::endl;
+		return;
+	}
+	m_friendsList[pos] = m_friendsList[m_numberOfFriends - 1];
+	--m_numberOfFriends;
+}
+
+void User::addNewTravel(const TravelInformation & newTravel)
+{
+	if (m_countTravels >= m_capacityTravels) {
+		resizeTravelInfo();
+	}
+	m_travels[m_countTravels] = newTravel;
+	++m_countTravels;
+
+	//Промяна за данните на дестинацията. Направи го в runProgram().
+	
+}
+
+
 
 /*void User::writeUserToFile(std::ofstream & ofs) const
 {
