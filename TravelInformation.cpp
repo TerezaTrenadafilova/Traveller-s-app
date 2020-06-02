@@ -11,7 +11,7 @@ TravelInformation::TravelInformation()
 	, m_dateOfDeparture(nullptr)
 	, m_evaluation(MIN_EVALUATION)
 	,m_comment(nullptr)*/
-	:m_destination(Destination::Destination())
+	:m_destination(nullptr)
 	, m_dateOfArrival(Date::Date())
 	, m_dateOfDeparture(Date::Date())
 	,m_evaluation(MIN_EVALUATION)
@@ -20,18 +20,20 @@ TravelInformation::TravelInformation()
 	,m_countPhoto(0)
 	,m_capacityPhoto(8)
 {
-	std::cout << "Default travelInfo cnst:" << std::endl;
+	m_destination = new Destination();
+	//std::cout << "Default travelInfo cnst:" << std::endl;
 	setComment("no comment");
 }
 
-TravelInformation::TravelInformation(Destination destination, Date arrival, Date departure ,unsigned evaluation, char *comment, Photo* photos, unsigned count, unsigned capacity)
+TravelInformation::TravelInformation(Destination* destination, Date arrival, Date departure ,unsigned evaluation, char *comment, Photo* photos, unsigned count, unsigned capacity)
 	//:m_destination(destination)//Преди промените в тялото на констректора
 	//,m_dateOfArrival(arrival)
 	//,m_dateOfDeparture(departure)
 	/*: m_destination(nullptr)
 	,m_dateOfArrival(nullptr)
 	,m_dateOfDeparture(nullptr)*/
-	:m_evaluation(evaluation)
+	:m_destination(nullptr)
+	,m_evaluation(evaluation)
 	, m_comment(nullptr) 
 	,m_photos(nullptr)
 	,m_countPhoto(count)
@@ -155,8 +157,11 @@ void TravelInformation::setEvaluation(unsigned evaluation)
 		m_evaluation = evaluation;
 		
 		//Промяна на сумата от всички оценки за дадена дестинация.
-		unsigned change = m_destination.getSumOfALL() + m_evaluation;
-		m_destination.setSumOfAll(change);
+	//	unsigned change = m_destination.getSumOfALL() + m_evaluation;
+		//m_destination.setSumOfAll(change);
+		
+		unsigned change = m_destination->getSumOfALL() + m_evaluation;
+		m_destination->setSumOfAll(change);
 	}
 	else {
 		std::cout << "Ivavalid evaluation. The evaluation will not be changed" << std::endl;
@@ -226,7 +231,7 @@ void TravelInformation::setPhotos(Photo * photo)
 
 char * TravelInformation::getDestination() const
 {
-	return m_destination.getDestination();
+	return m_destination->getDestination();
 }
 
 unsigned TravelInformation::getEvaluation() const
@@ -245,7 +250,11 @@ void TravelInformation::serialize(std::ofstream &ofs) const
 		std::cout << "File is not open!" << std::endl;
 		return;
 	}
-	m_destination.serialize(ofs);
+	//m_destination->serialize(ofs);
+	unsigned lenDest = strlen(m_destination->getDestination());
+	ofs.write((const char*)& lenDest, sizeof(lenDest));
+	ofs.write(m_destination->getDestination(), lenDest);
+
 	m_dateOfArrival.serialize(ofs);
 	m_dateOfDeparture.serialize(ofs);
 
@@ -276,7 +285,7 @@ void TravelInformation::deserialize(std::ifstream & ifs)
 		return;
 	}
 
-	m_destination.deserialize(ifs);
+	m_destination->deserialize(ifs);
 	m_dateOfArrival.deserialize(ifs);
 	m_dateOfDeparture.deserialize(ifs);
 
@@ -327,7 +336,7 @@ void TravelInformation::addPhoto(const Photo & photo)
 void TravelInformation::print() const
 {
 	//Направи принта да е по-хубав.
-	std::cout << m_destination.getDestination() << ", ";
+	std::cout << m_destination->getDestination() << ", ";
 	m_dateOfArrival.printDate();
 	std::cout << ", ";
 	m_dateOfDeparture.printDate();

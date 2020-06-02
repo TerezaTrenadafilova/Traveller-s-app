@@ -4,11 +4,14 @@
 #include<cstring>
 #include<iomanip>
 
-#include"User.hpp"
-#include"TravelInformation.hpp"
-#include"Destination.hpp"
-#include"Date.hpp"
-#include"Photo.hpp"
+//#include"User.hpp"
+//#include"TravelInformation.hpp"
+//#include"Destination.hpp"
+//#include"Date.hpp"
+//#include"Photo.hpp"
+#include"Manager.hpp"
+
+
 void testDate() {
 	std::ofstream ofs("date.bin", std::ios::out | std::ios::binary);
 
@@ -68,16 +71,16 @@ void testTravelInfo() {
 
 	Photo* p1 = new(std::nothrow) Photo[1];
 	p1->setPhoto("myPhoto.jpeg");
-	TravelInformation t1(destination, d1, d2, eval, comment, p1, 1, 2);
+	//TravelInformation t1(destination, d1, d2, eval, comment, p1, 1, 2);
 	destination.setNumberOfVisits(destination.getNumberOfVisits() + 1);
 	destination.setSumOfAll(destination.getSumOfALL() + eval);
 	std::cout << "Print info: " << std::endl;
-	t1.print();
+	//t1.print();
 	std::cout << "Destination: " << destination.getAverage() << ", " << destination.getNumberOfVisits() << ", " << destination.getSumOfALL() << std::endl;
 	std::cout << std::endl;
 	
 	std::ofstream ofs("travelInfo.bin", std::ios::out | std::ios::binary);
-	t1.serialize(ofs);
+	//t1.serialize(ofs);
 	ofs.close();
 
 	std::ifstream ifs("travelInfo.bin", std::ios::in | std::ios::binary);
@@ -260,7 +263,34 @@ int main() {
 	//
 	//
 
-testTravelInfo();
+	//testTravelInfo();
+
+	User u1("Teri", "13245", "teri@abv.bg");
+	std::ofstream ofs("User.db", std::ios::out | std::ios::binary);
+	if (!ofs.is_open()) {
+		std::cout << "In main error." << std::endl;
+		return 1;
+
+	}
+
+	unsigned count = 1;
+	unsigned capacity = 8;
+
+	ofs.write((const char*)& count, sizeof(count));
+	ofs.write((const char*)& capacity, sizeof(capacity));
+	u1.serializeUsersDatabase(ofs);
+
+	if (ofs.good()) {
+		std::cout << "Success." << std::endl;
+	}
+	else {
+		std::cout << "Error in file." << std::endl;
+	}
+	ofs.close();
+
+	Manager m;
+	m.runProgram();
+
 	system("pause");
 
 	return 0;

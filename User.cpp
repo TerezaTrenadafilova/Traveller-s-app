@@ -7,16 +7,54 @@ const unsigned MAX = 1024;
 
 User::User()
 	:m_userName(nullptr), m_password(nullptr),m_email(nullptr)
-	, m_friendsList(nullptr),m_numberOfFriends(0),m_capacityFriends(2)
-	,m_travels(nullptr), m_countTravels(0), m_capacityTravels(2)
-{}
+	, m_friendsList(nullptr),m_numberOfFriends(0),m_capacityFriends(startCapacity)
+	,m_travels(nullptr), m_countTravels(0), m_capacityTravels(startCapacity)
+{
+	/*m_userName = nullptr;
+	m_password = nullptr;
+	m_email = nullptr;
+	m_numberOfFriends = 0;
+	m_capacityFriends = startCapacity;
+	m_travels = nullptr;
+	m_countTravels = 0;
+	m_capacityTravels = startCapacity;*/
+
+	/*m_friendsList = new(std::nothrow) User[m_capacityFriends];
+	if (m_friendsList == nullptr) {
+		std::cout << "Not enought memory for friendsList in User(). Error!" << std::endl;
+		return;
+	}*/
+
+	//m_travels = new(std::nothrow) TravelInformation[m_capacityTravels];
+	//if (m_travels == nullptr) {
+	//	std::cout << "Not enought memory for travels in User(). Error!" << std::endl;
+	//	return;
+	//}
+
+	
+}
 
 User::User(char *name , char *password, char *email)
 	:m_userName(nullptr), m_password(nullptr), m_email(nullptr)
+	,m_friendsList(nullptr), m_numberOfFriends(0), m_capacityFriends(startCapacity)
+	,m_travels(nullptr), m_countTravels(0), m_capacityTravels(startCapacity)
 {
+	std::cout << "Second user constructor: " << std::endl;
 	setName(name);
 	setPassword(password);
 	setEmail(email);
+	
+	m_friendsList = new(std::nothrow) User[m_capacityFriends];
+	if (m_friendsList == nullptr) {
+		std::cout << "Not enought memory for friendsList in User(). Error!" << std::endl;
+		return;
+	}
+
+	m_travels = new(std::nothrow) TravelInformation[m_capacityTravels];
+	if (m_travels == nullptr) {
+		std::cout << "Not enought memory for travels in User(). Error!" << std::endl;
+		return;
+	}
 }
 
 User::User(char * name, char *password, char *email
@@ -29,7 +67,16 @@ User::User(char * name, char *password, char *email
 	setName(name);
 	setPassword(password);
 	setEmail(email);
-	setFriendsList(friends);
+	//setFriendsList(friends);
+
+	m_friendsList = new(std::nothrow) User[capacity];
+	if (m_friendsList == nullptr) {
+		std::cout << "Not enought memory for friendsList in void User:: copy(...). Error!" << std::endl << std::endl;
+		return;
+	}
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		m_friendsList[i] = friends[i];
+	}
 	
 	m_travels = new(std::nothrow) TravelInformation[capacityTravels];
 	if (m_travels == nullptr) {
@@ -68,8 +115,17 @@ void User::copy(const User & other)
 	setName(other.m_userName);
 	setPassword(other.m_password);
 	setEmail(other.m_email);
-	setFriendsList(other.m_friendsList);
+	//setFriendsList(other.m_friendsList);
 	setNumberOfFriends(other.m_numberOfFriends);
+
+	m_friendsList = new(std::nothrow) User[other.getCapacityOfFriends()];
+	if (m_friendsList == nullptr) {
+		std::cout << "Not enought memory for friendsList in void User:: copy(...). Error!" << std::endl << std::endl;
+		return;
+	}
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		m_friendsList[i] = other.m_friendsList[i];
+	}
 
 	m_travels = new(std::nothrow) TravelInformation[other.m_capacityTravels];
 	if (m_travels == nullptr) {
@@ -85,22 +141,38 @@ void User::copy(const User & other)
 
 void User::cleanMemory()
 {
-	delete[] m_userName;
-	m_userName = nullptr;
+	if (this != nullptr) {//Хвърля изключение, че this e nullptr. За това правя тази проверка. (add friend, когато приятелат е прочетен от файла)
+		delete[] m_userName;
+		m_userName = nullptr;
 
-	delete[] m_password;
-	m_password = nullptr;
+		delete[] m_password;
+		m_password = nullptr;
 
-	delete[] m_email;
-	m_email = nullptr;
+		delete[] m_email;
+		m_email = nullptr;
 
-	delete[] m_friendsList;
-	m_friendsList = nullptr;
+		delete[] m_friendsList;
+		m_friendsList = nullptr;
 
-	delete[] m_travels;
-	m_travels = nullptr;
+		delete[] m_travels;
+		m_travels = nullptr;
+	}
+	
+	
+		
 
-
+	/*
+	if (m_email != nullptr) {
+		
+	}
+	
+	if (m_friendsList != nullptr) {
+		
+	}
+	
+	if (m_travels != nullptr) {
+		
+	}*/
  }
 
 void User::setName(char *name)
@@ -142,6 +214,7 @@ void User::resizeFriendList()
 {
 	unsigned newCapacity = m_capacityFriends* 2;
 	User* newFr = new (std::nothrow) User[newCapacity];
+	std::cout << " in resize: " << m_capacityFriends << ", " << newCapacity << std::endl;
 
 	if (newFr == nullptr) {
 		std::cout << "Not enought memory for resize friends list! Error!" << std::endl;
@@ -151,6 +224,7 @@ void User::resizeFriendList()
 	for (unsigned i = 0; i < m_capacityFriends; ++i) {
 		newFr[i] = m_friendsList[i];
 	}
+
 	m_capacityFriends = newCapacity;
 	delete[] m_friendsList;
 	m_friendsList = newFr;
@@ -191,6 +265,24 @@ void User::resizeTravelInfo()
 //	}
 //	u.m_email = nullptr;
 //}
+
+void User::memoryAllocFriendsList()
+{
+	m_friendsList = new(std::nothrow) User[m_capacityFriends];
+	if (m_friendsList == nullptr) {
+		std::cout << "Error in memoryAllocFriendsList()." << std::endl;
+		return;
+	}
+}
+
+void User::memoryAllocTravelInfo()
+{
+	m_travels = new(std::nothrow) TravelInformation[m_capacityTravels];
+	if (m_travels == nullptr) {
+		std::cout << "Not enought memory for travels in memoryAllocTravelInfo(). Error!" << std::endl;
+		return;
+	}
+}
 
 void User::setFriendsList(User* friends)
 {
@@ -431,11 +523,30 @@ void User::prinDestinationEvaluation(char *destinationName) const
 
 void User::addFriend(const User & newFriend)
 {
+	//Проверка дали вече не са приятели.
+	if (isFriend(newFriend.getUserName()) == true) {
+		std::cout << "You are friends." << std::endl << std::endl;
+		return;
+	}
 	if (m_numberOfFriends >= m_capacityFriends) {
 		resizeFriendList();
 	}
+
+	std::cout << "numb of fr: " << m_numberOfFriends << std::endl;
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		std::cout << m_friendsList[i].getUserName() << std::endl;
+	}
+
 	m_friendsList[m_numberOfFriends] = newFriend;
-	++m_numberOfFriends;
+	std::cout << "dabaven e: " << std::endl;
+	
+	for (int i = 0; i < m_numberOfFriends; ++i) {
+		std::cout << m_friendsList[i].getUserName() << std::endl;
+	}
+
+	//++m_numberOfFriends;
+	setNumberOfFriends(m_numberOfFriends + 1);
+	std::cout << "number of fr is: " << m_numberOfFriends << std::endl;
 }
 
 void User::removeFriend(const User & adversary)

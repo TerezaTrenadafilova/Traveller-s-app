@@ -2,19 +2,18 @@
 #define __DESTINATION_HPP
 
 #include<fstream>
-#include "User.hpp"
+#include"User.hpp"
 
 const unsigned startCapacity = 8;
+class User;//За да може да се създаде правилно class Destination.
 
 class Destination {
 private:
 	char* m_name;
 	unsigned m_numberOfVisits;
 	unsigned m_sumOfAllEstimates;
-	//double m_average;
-
-	//Всяка дестинация ще има списък с потребители, които са я посетили
-	User* m_users;
+	
+	User* m_users;  // C4430
 	unsigned m_numberOfUsers;
 	unsigned m_capacityOfUsers;
 

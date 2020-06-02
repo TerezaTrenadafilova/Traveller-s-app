@@ -8,9 +8,10 @@
 #include "Date.hpp"
 #include "Photo.hpp"
 
+class Destination;
 class TravelInformation {
 private:
-	Destination m_destination;
+	Destination* m_destination;
 
 	Date m_dateOfArrival;
 	Date m_dateOfDeparture;
@@ -27,7 +28,7 @@ private:
 public:
 	//Голяма четворка
 	TravelInformation();
-	TravelInformation(Destination,Date,Date, unsigned, char* , Photo* , unsigned,unsigned);
+	TravelInformation(Destination*,Date,Date, unsigned, char* , Photo* , unsigned,unsigned);
 
 	//Конструктор за капиране.
 	TravelInformation(const TravelInformation&);

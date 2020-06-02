@@ -5,6 +5,8 @@
 #include<cstring>
 #include"TravelInformation.hpp"
 
+class TravelInformation;
+
 class User {
 private:
 	//ƒанните, които се паз€т в базата данни за потребителите.
@@ -57,6 +59,9 @@ private:
 
 public:
 	//void freeMemory(User& );
+
+	void memoryAllocFriendsList();
+	void memoryAllocTravelInfo();
 
 	//ћутатори за пром€на на при€телите.
 	void setFriendsList(User*);

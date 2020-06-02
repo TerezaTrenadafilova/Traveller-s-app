@@ -20,6 +20,9 @@ public:
 	//Дали има вписан потребител.
 	bool isLoggedIn = false;
 
+	//Дали има успешно отворен файл.
+	bool isSuccessfullyOpen = false;
+
 	//Голяма четворка
 	Manager();
 	Manager(User*, unsigned, unsigned, Destination*, unsigned, unsigned);
@@ -56,13 +59,16 @@ public:
 	void checkDestination(char*);
 
 	//Добавяне на приятел.
-	void  addNewFriend(const User&);
+	void  addNewFriend(/*const User&*/ char*);
 
 	//Премахване на приятел.
-	void removeFriend(const User&);
+	void removeFriend(/*const User&*/ char*);
 
 	//Добавяне на дестинация.
 	void addDestination(const TravelInformation&);
+
+	//Стратиране на програмата.
+	void runProgram();
 
 
 private:

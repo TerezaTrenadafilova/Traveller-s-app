@@ -3,9 +3,9 @@
 #include<cstring>
 #include"Manager.hpp"
 
-unsigned startCapacity = 8;
+//unsigned startCapacity = 8;
 
-unsigned const MAX_LEN_COMMAND = 11;
+//unsigned const MAX_LEN_COMMAND = 11;
 unsigned const MAX_LEN = 50;
 
 //Разширението на файла с личната база данни.
@@ -104,6 +104,15 @@ void Manager::open(char * fileName)
 		}
 		for (int i = 0; i < m_numberOfUsers; ++i) {
 			m_users[i].deserializeUsersDatabase(ifs);
+			m_users[i].memoryAllocFriendsList();
+			m_users[i].memoryAllocTravelInfo();
+		}
+
+		std::cout << "open: " << std::endl;
+		std::cout << m_numberOfUsers << ", " << m_capacityOfUsers << std::endl;
+
+		for (int i = 0; i < m_numberOfUsers; ++i) {
+			std::cout << m_users[i].getUserName() << ", " << m_users[i].getPassword() << ", " << m_users[i].getEmail() << std::endl;
 		}
 
 		/*if (ifs.good()) {
@@ -134,6 +143,7 @@ void Manager::open(char * fileName)
 
 	if (ifs.good()) {
 		std::cout << std::endl << "Successfully opened file " << fileName << std::endl << std::endl;
+		isSuccessfullyOpen = true;
 	}
 	else {
 		std::cout << "File is not readen." << std::endl;
@@ -150,7 +160,9 @@ void Manager::closeFile()
 	}
 
 	cleanMemory();
-
+	isSuccessfullyOpen = false;
+	m_nameFile = nullptr;
+	m_numberOfUsers = 0;//Текущият брой на потребителите се нулира.
 	std::cout << std::endl << "Successfully closed file." << std::endl << std::endl;
 }
 
@@ -181,10 +193,10 @@ void Manager::save()
 			m_destinations[i].serialize(ofs);
 		}
 	}
-	else {
+	/*else {
 		//За личната база данни
 		m_users[posLoggedUser].serializePersonalDataBase(ofs);
-	}
+	}*/
 
 	if (ofs.good()) {
 		std::cout << std::endl << "Successfully saved " << m_nameFile << std::endl << std::endl;
@@ -192,6 +204,7 @@ void Manager::save()
 	else {
 		std::cout << std::endl << "Save has failed. " << std::endl << std::endl;
 	}
+	ofs.close();
 }
 
 void Manager::saveas(char * newFileName) 
@@ -223,7 +236,7 @@ void Manager::saveas(char * newFileName)
 		}
 	}
 
-	//Може би не би трябвало да създаваме нов файл с личната база данни.
+	
 
 	if (ofs.good()) {
 		std::cout << std::endl << "Successfully saved another file " << newFileName << std::endl;
@@ -232,6 +245,7 @@ void Manager::saveas(char * newFileName)
 		std::cout << std::endl << "Unsuccessfully saved another file " << newFileName << std::endl;
 	}
 
+	ofs.close();
 }
 
 void Manager::setM_NameFile(char *name)
@@ -382,22 +396,26 @@ void Manager::login()
 		/*std::cout << "Email: ";
 		std::cin.getline(email, MAX_LEN);*/
 
-		std::ifstream ifs("User.db", std::ios::in | std::ios::binary);
-		unsigned count = 0;
-		
-		//Прочитане на всички потретбители на приложението.
-		ifs.read((char*)& count, sizeof(count));
-		User *usersList = new(std::nothrow) User[count];
-		if (usersList == nullptr) {
-			std::cout << "Error!" << std::endl;
-			return;
-		}
+		//std::ifstream ifs("User.db", std::ios::in | std::ios::binary);
+		//if (!ifs.is_open()) {
+		//	std::cout << "File is not open in login. Error." << std::endl;
+		//	return;
+		//}
+		//unsigned count = 0;
+		//
+		////Прочитане на всички потретбители на приложението.
+		//ifs.read((char*)& count, sizeof(count));
+		//User *usersList = new(std::nothrow) User[count];
+		//if (usersList == nullptr) {
+		//	std::cout << "Error!" << std::endl;
+		//	return;
+		//}
 
-		for (int i = 0; i < count; ++i) {
-			usersList[i].deserializeUsersDatabase(ifs);
-		}
+		//for (int i = 0; i < count; ++i) {
+		//	usersList[i].deserializeUsersDatabase(ifs);
+		//}
 
-		ifs.close();
+		//ifs.close();
 
 		//for (int i = 0; i < count; ++i) {
 		//	//Търсене дали съществува такъв потребител.
@@ -444,14 +462,25 @@ void Manager::login()
 			std::cout << " user data base is: " << userDataBase << std::endl;
 
 			//Отваряне на личната база данни на потребителя. Тя ще бъде празна, защото потребителят е нов.
+			std::ifstream ifs;
+			
 			ifs.open(userDataBase, std::ios::binary | std::ios::in|std::ios::app);
 			if (!ifs.is_open()) {
 				std::cout << userDataBase << " is not opened. Error!" << std::endl << std::endl;
 			}
 
-			//Прочитане на личната база данни на потребителя.
-			usersList[posLoggedUser].deserializePersonalDataBase(ifs);
-			ifs.close();
+			//Проверка дали личната база данни не е прадзна.
+			ifs.seekg(0, std::ios::end);
+			if (ifs.tellg()) {
+				//Прочитане на личната база данни на потребителя.
+				m_users[posLoggedUser].deserializePersonalDataBase(ifs);
+				ifs.close();
+			}
+			else {
+				std::cout << "Private database is empty." << std::endl << std::endl;
+				std::cout << "Pos logged user: " << posLoggedUser << std::endl
+					<< m_users[posLoggedUser].getNumberOfFriends() << ", " << m_users[posLoggedUser].getNumberOfTravels() << std::endl;
+			}
 
 			//Работа с m_nameFile
 			setM_NameFile(userDataBase);
@@ -517,13 +546,14 @@ void Manager::registrerNewUser()
 	strcat(userDataBase, extDataBase);
 	std::cout << "User data base is: " << userDataBase << std::endl;
 
-	std::ifstream ifs(userDataBase, std::ios::binary | std::ios::in);
+	//Личната база данни се отваря, когато потребетелят се впише (в login()).
+	/*std::ifstream ifs(userDataBase, std::ios::binary | std::ios::in);
 	if (!ifs.is_open()) {
 		std::cout << userDataBase << " is not open. Error!" << std::endl << std::endl;
 		return;
 	}
 
-	setM_NameFile(userDataBase);
+	setM_NameFile(userDataBase);*/
 
 }
 
@@ -534,6 +564,11 @@ void Manager::exit()
 
 void Manager::printUser() const
 {
+	
+	if (m_numberOfUsers == 0) {
+		std::cout << "There are no registered users." << std::endl << std::endl;
+		return;
+	}
 	std::cout << std::endl << "Users in traveller's app: " << std::endl;
 	for (int i = 0; i < m_numberOfUsers; ++i) {
 		std::cout << m_users[i].getUserName() << ", " << m_users[i].getEmail()<<std::endl;
@@ -631,25 +666,48 @@ void Manager::checkDestination(char * dest)
 	m_destinations[pos].printUserWhoVisitedDestination();
 }
 
-void Manager::addNewFriend(const User & newFriend)
-{
-	//Проверка дали newFriend e потребител на системата.
-	//Махни проверката, ако правиш проверка в runProgram().
-	if (isUsed(newFriend.getUserName()) == true) {
+void Manager::addNewFriend(/*const User & newFriend*/char* nameFriend)
+{	
+	if (isUsed(nameFriend) == true) {
+		//Проверка дали името не е на текущо влезлият потребител.
+		if (strcmp(nameFriend, m_users[posLoggedUser].getUserName()) == 0) {
+			std::cout << std::endl << "Impossible operation. The name you entered matches your own." << std::endl << std::endl;
+			return;
+		}
+		//Намиране на позицията на проителя с даденото име.
+		unsigned posFriend = posOfUserByName(nameFriend);
+		
+		User friendUser=m_users[posFriend];
+		std::cout << friendUser.getUserName() << ", " << friendUser.getEmail() << std::endl;
+
 		//На потребителя, който е влязъл се добавя нов приятел.
-		m_users[posLoggedUser].addFriend(newFriend);
-		std::cout << std::endl << "You are friends with " << newFriend.getUserName() << "." << std::endl << std::endl;
+		m_users[posLoggedUser].addFriend(friendUser);
+
+		//Приятелството е симетрична релация.
+		m_users[posFriend].addFriend(m_users[posLoggedUser]);
+
+		std::cout << std::endl << "You are friends with " << friendUser.getUserName() << "." << std::endl << std::endl;
 	}
 	else {
-		std::cout << newFriend.getUserName << " is not exist." << std::endl << std::endl;
+		std::cout << nameFriend<< " is not exist." << std::endl << std::endl;
 	}
-	
 }
 
-void Manager::removeFriend(const User & adversary)
+void Manager::removeFriend(/*const User & adversary*/char*  nameFriend)
 {
-	m_users[posLoggedUser].removeFriend(adversary);
-	std::cout << std::endl << "You bloked " << adversary.getUserName() << ". You are no longer friends."<<std::endl << std::endl;
+	if (isUsed(nameFriend) == true) {
+		//Намиране на позицията на проителя с даденото име.
+		unsigned posFriend = posOfUserByName(nameFriend);
+
+		//На потребителя, който е влязъл се премахва приятел.
+		m_users[posLoggedUser].removeFriend(m_users[posFriend]);
+		m_users[posFriend].removeFriend(m_users[posLoggedUser]);//Защото приятелството е симетрична релация.
+
+		std::cout << std::endl << "You bloked " << m_users[posFriend].getUserName() << ". You are no longer friends." << std::endl << std::endl;
+	}
+	else {
+		std::cout << nameFriend << " is not exist." << std::endl << std::endl;
+	}
 }
 
 void Manager::addDestination(const TravelInformation & newTravel)
@@ -689,4 +747,137 @@ void Manager::addDestination(const TravelInformation & newTravel)
 
 	m_destinations[m_numberOfDestinations] = newDest;
 	++m_numberOfDestinations;
+}
+
+void Manager::runProgram()
+{
+	const unsigned MAX_COMMAND = 35;
+	char command[MAX_COMMAND];
+
+	for (;;) {
+		std::cout << "Command: ";
+		std::cin.getline(command, MAX_COMMAND);
+
+		//Отваряне на нов файл.
+		if (strcmp(command, "open") == 0) {
+			char fileName[MAX_LEN * 10];//Умножавам по 10, защото е възможно да има по-дълго име на файл с над 50 елемента.
+			std::cin.getline(fileName, MAX_LEN * 10);
+
+			open(fileName);
+
+		}
+
+		//Затваряне на файл.
+		if (strcmp(command, "close") == 0) {
+			closeFile();
+		}
+
+		//Запазване на текущо отворения файл.
+		if (strcmp(command, "save") == 0) {
+			save();
+		}
+
+		//Запазване в нов файл.
+		if (strcmp(command, "saveas") == 0) {
+			char fileName[MAX_LEN * 10];
+			std::cin.getline(fileName, MAX_LEN * 10);
+
+			saveas(fileName);
+		}
+
+		//Помощ.
+		if (strcmp(command, "help") == 0) {
+			help();
+		}
+
+		//Вписване на потребител.
+		if (strcmp(command, "log in") == 0) {
+			login();
+		}
+
+		//Отписване на потребител.
+		if (strcmp(command, "log out") == 0) {
+			logout();
+		}
+
+		//Регистриране на нов потребител.
+		if (strcmp(command, "registration") == 0) {
+			registrerNewUser();
+		}
+
+		//Изход.
+		if (strcmp(command, "exit") == 0) {
+			exit();
+			break;
+		}
+
+		//Извеждане на всички потребители.
+		if (strcmp(command, "print users") == 0) {
+			printUser();
+		}
+
+		//Изваеждане на всички дестинации.
+		if (strcmp(command, "print destinations") == 0) {
+			printDestinations();
+		}
+
+		//Проверка дали приятел е посетил дадена дестниация.
+		if (strcmp(command, "check friend destination") == 0) {
+			char nameFriend[MAX_LEN];
+			char nameDestination[MAX_LEN];
+
+			std::cout << "Friend's name: ";
+			std::cin.getline(nameFriend, MAX_LEN);
+
+			std::cout << "Destination: ";
+			std::cin.getline(nameDestination, MAX_LEN);
+
+			checkFriendDestination(nameFriend, nameDestination);
+		}
+
+		//Извеждане на всички дестинации, които е посетил приятел.
+		if (strcmp(command, "print all freind's destinations") == 0) {
+			char nameFriend[MAX_LEN];
+			
+			std::cout << "Friend's name: ";
+			std::cin.getline(nameFriend, MAX_LEN);
+
+			allDesinationOfFriend(nameFriend);
+		}
+
+		//Проверка за дадена дестинация.
+		if (strcmp(command, "check destination") == 0) {
+			char nameDestination[MAX_LEN];
+
+			std::cout << "Destination: ";
+			std::cin.getline(nameDestination, MAX_LEN);
+
+			checkDestination(nameDestination);
+		}
+
+		//Добавяне на приятел.
+		if (strcmp(command, "add friend") == 0) {
+			char nameFriend[MAX_LEN];
+
+			std::cout << "Friend's name: ";
+			std::cin.getline(nameFriend, MAX_LEN);
+
+			addNewFriend(nameFriend);
+		}
+
+		//Премахване на приятел.
+		if (strcmp(command, "block friend") == 0) {
+			char nameFriend[MAX_LEN];
+
+			std::cout << "Friend's name: ";
+			std::cin.getline(nameFriend, MAX_LEN);
+
+			removeFriend(nameFriend);
+		}
+
+		if(m_nameFile!= nullptr)
+			std::cout << std::endl << "Last opened file name: " << m_nameFile << std::endl << std::endl;
+
+		//Добавяне на дестинация.
+	}
 }
