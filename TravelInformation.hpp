@@ -8,6 +8,7 @@
 #include "Date.hpp"
 #include "Photo.hpp"
 
+
 class Destination;
 class TravelInformation {
 private:
@@ -25,10 +26,15 @@ private:
 	unsigned m_capacityPhoto;
 	//Помисли дали ти трабва списък с потребители, които са посетили дадена дестинация.
 
+	//Променлива, която пази дали коректо е съзадено пътуване, т.е дали датите са валидни и дали имената на снимките също.
+	bool isCorrectTravel = false;
+
+	static const unsigned startCapacity = 8;//беше глобална константа преди класа
+
 public:
 	//Голяма четворка
 	TravelInformation();
-	TravelInformation(Destination*,Date,Date, unsigned, char* , Photo* , unsigned,unsigned);
+	TravelInformation(Destination*,Date,Date, unsigned, char* , Photo* =nullptr, unsigned=0,unsigned=startCapacity);
 
 	//Конструктор за капиране.
 	TravelInformation(const TravelInformation&);
@@ -54,8 +60,9 @@ public:
 	//void setDestination(char*);
 	void setEvaluation(unsigned);
 	void setComment(char*);
-	void setDateOfArrival(const Date&);
-	void setDeteOfDeparture(const Date&);
+	//void setDateOfArrival(const Date&);
+//	void setDeteOfDeparture(const Date&);
+	void setDates(const Date&, const Date&);
 	void setPhotos(Photo* );
 
 	//Селектори.
@@ -75,6 +82,8 @@ public:
 
 	void print()const;
 
+	//Функция, която връща исктина, ако коректно е съзададено пътуване.
+	bool isCorrectTravelInfo()const;
 
 };
 

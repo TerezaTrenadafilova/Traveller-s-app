@@ -8,7 +8,7 @@
 
 Destination::Destination()
 	:m_name(nullptr), m_numberOfVisits(0), m_sumOfAllEstimates(0)
-	,m_users(nullptr), m_numberOfUsers(0), m_capacityOfUsers(startCapacity)
+	,m_users(nullptr), m_numberOfUsers(0), m_capacityOfUsers(Capacity)
 {
 	m_users = new(std::nothrow) User[m_capacityOfUsers];
 	if (m_users == nullptr) {

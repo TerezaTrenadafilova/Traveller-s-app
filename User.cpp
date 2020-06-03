@@ -3,7 +3,7 @@
 #include <iostream>
 //#include <fstream>
 
-const unsigned MAX = 1024;
+//const unsigned MAX = 1024;
 
 User::User()
 	:m_userName(nullptr), m_password(nullptr),m_email(nullptr)
@@ -39,7 +39,6 @@ User::User(char *name , char *password, char *email)
 	,m_friendsList(nullptr), m_numberOfFriends(0), m_capacityFriends(startCapacity)
 	,m_travels(nullptr), m_countTravels(0), m_capacityTravels(startCapacity)
 {
-	std::cout << "Second user constructor: " << std::endl;
 	setName(name);
 	setPassword(password);
 	setEmail(email);
@@ -208,6 +207,11 @@ void User::setEmail(char * email)
 	}
 
 	strcpy(m_email, email);
+}
+
+void User::setNumberOfTravels(unsigned number)
+{
+	m_countTravels = number;
 }
 
 void User::resizeFriendList()
@@ -515,7 +519,7 @@ void User::printDestinationInfoByName(char * name) const
 void User::prinDestinationEvaluation(char *destinationName) const
 {
 	for (int i = 0; i < m_countTravels; ++i) {
-		if (strcmp(destinationName, m_travels[i].getDestination()) == 0) {
+		if (strcmp( m_travels[i].getDestination(), destinationName) == 0) {
 			std::cout << m_travels[i].getEvaluation() << std::endl;
 		}
 	}
@@ -569,11 +573,26 @@ void User::removeFriend(const User & adversary)
 
 void User::addNewTravel(const TravelInformation & newTravel)
 {
+	std::cout << "In User:: addNewTravel()." << std::endl;
 	if (m_countTravels >= m_capacityTravels) {
+		std::cout << "In if" << std::endl;
 		resizeTravelInfo();
 	}
+	std::cout << "count of travels: " << m_countTravels << std::endl;
+	std::cout << "New travel info: " << newTravel.getDestination() << ", " << newTravel.getComment() << std::endl;
 	m_travels[m_countTravels] = newTravel;
-	++m_countTravels;
+
+	if (m_travels == nullptr) {
+		std::cout << "m_travels is nullptr. Error" << std::endl;
+		return;
+	}
+
+	setNumberOfTravels(m_countTravels + 1);
+
+//	std::cout << "After add: ";
+//	m_travels[m_countTravels].print();
+//	++m_countTravels;
+//	std::cout << "m_countTravels: " << m_countTravels << std::endl;
 
 	//Промяна за данните на дестинацията. Направи го в runProgram().
 	

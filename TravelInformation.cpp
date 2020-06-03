@@ -18,10 +18,15 @@ TravelInformation::TravelInformation()
 	, m_comment(nullptr)
 	,m_photos(nullptr)
 	,m_countPhoto(0)
-	,m_capacityPhoto(8)
+	,m_capacityPhoto(startCapacity)
 {
 	m_destination = new Destination();
 	//std::cout << "Default travelInfo cnst:" << std::endl;
+	m_photos = new(std::nothrow) Photo[m_capacityPhoto];
+	if (m_photos == nullptr) {
+		std::cout << "Not enought memory for photos in TravleInformation(). Error!" << std::endl << std::endl;
+		return;
+	}
 	setComment("no comment");
 }
 
@@ -40,22 +45,18 @@ TravelInformation::TravelInformation(Destination* destination, Date arrival, Dat
 	,m_capacityPhoto(capacity)
 {
 	m_destination = destination;
-	m_dateOfArrival = arrival;
-	m_dateOfDeparture = departure;
-	
-	//Тази част с проманната на данните за дестинацията ще е локална. За това трябва да се изнесе извън конструктора.
 
-	////Промяна на общия брой посещения.
-	//unsigned numberVisit = destination.getNumberOfVisits() + 1;
-	//destination.setNumberOfVisits(numberVisit);
-	//m_destination.setNumberOfVisits(numberVisit);
-	//std::cout << "destination number of visits in TI constr: " << destination.getNumberOfVisits() << std::endl;
-	//
-	////Промяна на сумата от всички оценки на дестинацията.
-	//unsigned sumAll = destination.getSumOfALL() + m_evaluation;
-	//destination.setSumOfAll(sumAll);
-	//m_destination.setSumOfAll(sumAll);
-	//std::cout << "destination sumOfAll in TI constr: " << destination.getSumOfALL() << std::endl;
+	/*if (arrival.getDay() <= departure.getDay()) {
+		if (arrival.getMonth() <= departure.getMonth()) {
+			if (arrival.getYear() <= departure.getYear()) {
+				m_dateOfArrival = arrival;
+				m_dateOfDeparture = departure;
+				isCorrectTravel = true;
+			}
+		}
+	}*/
+
+	setDates(arrival, departure);
 	
 	setComment(comment);
 	setPhotos(photos);
@@ -90,8 +91,10 @@ void TravelInformation::copy(const TravelInformation & other)
 
 	setEvaluation(other.m_evaluation);
 	setComment(other.m_comment);
-	setDateOfArrival(other.m_dateOfArrival);
-	setDeteOfDeparture(other.m_dateOfDeparture);
+	//setDateOfArrival(other.m_dateOfArrival);
+	//setDeteOfDeparture(other.m_dateOfDeparture);
+	m_dateOfArrival = other.m_dateOfArrival;//Провека за датите, изнесия в отделена функция.
+	m_dateOfDeparture = other.m_dateOfDeparture;
 
 	m_photos = new(std::nothrow) Photo[other.m_capacityPhoto];
 	if (m_photos == nullptr) {
@@ -183,32 +186,54 @@ void TravelInformation::setComment(char * comment)
 	strcpy(m_comment, comment);
 }
 
-void TravelInformation::setDateOfArrival( const Date& date)
+//void TravelInformation::setDateOfArrival( const Date& date)
+//{
+//	if (date.getYear() <= m_dateOfDeparture.getYear() && date.getMonth() <= m_dateOfDeparture.getMonth()&& date.getDay() <= m_dateOfDeparture.getDay()) {
+//		m_dateOfArrival = date;
+//	}
+//	else {
+//		std::cout << "Invalid date of arrival! " << std::endl;
+//		return;
+//	}
+//
+//}
+//
+//void TravelInformation::setDeteOfDeparture(const Date& date)
+//{
+//	/*m_dateOfDeparture = new(std::nothrow) Date;
+//	if (m_dateOfDeparture == nullptr) {
+//		std::cout << "Not enought memory for date of departure. Error!" << std::endl;
+//		return;
+//	}*/
+//
+//	if (date.getYear() >= m_dateOfArrival.getYear() && date.getMonth() >= m_dateOfArrival.getMonth() && date.getDay() >= m_dateOfArrival.getDay()) {
+//		m_dateOfDeparture = date;
+//	}
+//	else {
+//		std::cout << "Invalid date of departure! " << std::endl;
+//		return;
+//	}
+//}
+
+void TravelInformation::setDates(const Date & dateA, const Date & dateD)
 {
-	if (date.getYear() <= m_dateOfDeparture.getYear() && date.getMonth() <= m_dateOfDeparture.getMonth()&& date.getDay() <= m_dateOfDeparture.getDay()) {
-		m_dateOfArrival = date;
+	if (dateA.getDay() <= dateD.getDay()) {
+		if (dateA.getMonth() <= dateD.getMonth()) {
+			if (dateA.getYear() <= dateD.getYear()) {
+				m_dateOfArrival = dateA;
+				m_dateOfDeparture = dateD;
+				isCorrectTravel = true;
+			}
+			else {
+				std::cout << "Inavilid dates." << std::endl;
+			}
+		}
+		else {
+			std::cout << "Inavilid dates." << std::endl;
+		}
 	}
 	else {
-		std::cout << "Invalid date of arrival! " << std::endl;
-		return;
-	}
-
-}
-
-void TravelInformation::setDeteOfDeparture(const Date& date)
-{
-	/*m_dateOfDeparture = new(std::nothrow) Date;
-	if (m_dateOfDeparture == nullptr) {
-		std::cout << "Not enought memory for date of departure. Error!" << std::endl;
-		return;
-	}*/
-
-	if (date.getYear() >= m_dateOfArrival.getYear() && date.getMonth() >= m_dateOfArrival.getMonth() && date.getDay() >= m_dateOfArrival.getDay()) {
-		m_dateOfDeparture = date;
-	}
-	else {
-		std::cout << "Invalid date of departure! " << std::endl;
-		return;
+		std::cout << "Inavilid dates." << std::endl;
 	}
 }
 
@@ -216,11 +241,11 @@ void TravelInformation::setPhotos(Photo * photo)
 {
 	m_photos = new(std::nothrow) Photo[m_capacityPhoto];
 	if (m_photos == nullptr) {
-		std::cout << "Not enought memory." << std::endl;
+		std::cout << "Not enought memory for photos. Error." << std::endl;
 		return;
 	}
 	for (int i = 0; i < m_countPhoto; ++i) {
-		m_photos[i] = photo[i];
+		m_photos[i] = photo[i];//Проверка дали всички снимки са  коректни. Помисли дали ти трабва?
 	}
 }
 
@@ -341,6 +366,11 @@ void TravelInformation::print() const
 	std::cout << ", ";
 	m_dateOfDeparture.printDate();
 	std::cout << ", " << m_evaluation << ", " << m_comment << std::endl;
+}
+
+bool TravelInformation::isCorrectTravelInfo() const
+{
+	return isCorrectTravel;
 }
 
 //char ** TravelInformation::getPhotos() const

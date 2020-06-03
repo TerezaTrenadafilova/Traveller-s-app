@@ -106,6 +106,30 @@ void testPhoto() {
 	Photo p2("img.jpeg");
 	std::cout << p2.getPhoto() << std::endl;
 
+	Photo p3("error.txt");
+	std::cout << p3.getPhoto() << std::endl;
+
+}
+
+void testMenagerClass() {
+
+	Manager m;
+	m.registrerNewUser();
+	m.registrerNewUser();
+	m.login();
+	Destination* dest = new Destination("Melnik");
+	Date a(1, 3, 2020);
+	Date b(2, 3, 2020);
+	unsigned eval = 4;
+	char comment[3];
+	std::cin.getline(comment, 3);
+
+	TravelInformation t1(dest, a, b, eval, comment);
+	m.addDestination(t1);
+
+	m.printUser();
+
+	m.printDestinations();
 }
 
 int main() {
@@ -264,18 +288,40 @@ int main() {
 	//
 
 	//testTravelInfo();
+	
+	unsigned count = 1;
+	unsigned capacity = 8;
+
+	Destination dest("Melnik");
+	std::cout << dest.getDestination() << ", " << dest.getNumberOfVisits() << std::endl;
+	std::ofstream ofs("Destinations.db", std::ios::out | std::ios::binary);
+	if (!ofs.is_open()) {
+		std::cout << "In main error." << std::endl;
+		return 1;
+	}
+
+	ofs.write((const char*)& count, sizeof(count));
+	ofs.write((const char*)& capacity, sizeof(capacity));
+	dest.serialize(ofs);
+
+	if (ofs.good()) {
+		std::cout << "Success." << std::endl;
+	}
+	else {
+		std::cout << "Error in file." << std::endl;
+	}
+	ofs.close();
+
 
 	User u1("Teri", "13245", "teri@abv.bg");
-	std::ofstream ofs("User.db", std::ios::out | std::ios::binary);
+	ofs.open("User.db", std::ios::out | std::ios::binary);
 	if (!ofs.is_open()) {
 		std::cout << "In main error." << std::endl;
 		return 1;
 
 	}
 
-	unsigned count = 1;
-	unsigned capacity = 8;
-
+	
 	ofs.write((const char*)& count, sizeof(count));
 	ofs.write((const char*)& capacity, sizeof(capacity));
 	u1.serializeUsersDatabase(ofs);
@@ -287,6 +333,9 @@ int main() {
 		std::cout << "Error in file." << std::endl;
 	}
 	ofs.close();
+
+
+ //testPhoto();
 
 	Manager m;
 	m.runProgram();

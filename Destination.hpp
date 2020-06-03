@@ -4,7 +4,7 @@
 #include<fstream>
 #include"User.hpp"
 
-const unsigned startCapacity = 8;
+
 class User;//За да може да се създаде правилно class Destination.
 
 class Destination {
@@ -17,10 +17,11 @@ private:
 	unsigned m_numberOfUsers;
 	unsigned m_capacityOfUsers;
 
+	static const unsigned Capacity = 8;
 public:
 	//Голяма четворка.
 	Destination();
-	Destination(char*, unsigned, unsigned=0, User* =nullptr, unsigned = 0, unsigned = startCapacity);
+	Destination(char*, unsigned=0, unsigned=Capacity, User* =nullptr, unsigned = 0, unsigned = Capacity);
 	//Destination(char*, unsigned, unsigned, User*, unsigned, unsigned);
 	Destination(const Destination&);
 	Destination& operator=(const Destination&);

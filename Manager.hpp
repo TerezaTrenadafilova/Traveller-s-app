@@ -16,6 +16,9 @@ private:
 	unsigned m_numberOfDestinations;
 	unsigned m_capacityOfDestinations;
 
+	static unsigned const startCapacity = 8;
+	static unsigned const MAX_LEN = 50;
+
 public:
 	//Дали има вписан потребител.
 	bool isLoggedIn = false;
@@ -67,6 +70,9 @@ public:
 	//Добавяне на дестинация.
 	void addDestination(const TravelInformation&);
 
+	//Преглед на пътуванията на влезлия потребител.
+	void viewLoggedInUserTravels()const;
+
 	//Стратиране на програмата.
 	void runProgram();
 
@@ -102,6 +108,10 @@ private:
 
 	//Функция, която проверавя дали дадено потребителско име не е заето.
 	bool isUsed(char*);
+
+	//Фукция, която проверява дали името на въведената снимка е валидно или не.
+	bool isValidPhoto(char*);
+
 
 };
 

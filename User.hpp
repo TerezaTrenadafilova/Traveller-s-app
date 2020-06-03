@@ -23,6 +23,9 @@ private:
 	TravelInformation* m_travels;
 	unsigned m_countTravels;
 	unsigned m_capacityTravels;
+
+	static const unsigned startCapacity = 8;
+	static const unsigned MAX = 1024;
 	
 public:
 	//Може би няма да ми трябва, но за сега ще го оставя.
@@ -52,6 +55,7 @@ private:
 	void setName(char*);
 	void setPassword(char*);
 	void setEmail(char*);
+	void setNumberOfTravels(unsigned);
 
 	//Преоразмеряване на списъка с приятели.
 	void resizeFriendList();

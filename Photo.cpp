@@ -38,6 +38,32 @@ Photo::~Photo()
 }
 
 void Photo::setPhoto(char * namePhoto)
+{	if(m_name!=nullptr){
+		delete[]m_name;
+		m_name = nullptr;
+	}
+
+	if (isValidName(namePhoto) == true) {
+		strcpy(m_name, namePhoto);
+		isCorrectPhotoCreate = true;
+	}
+	else {
+		m_name = nullptr;
+	}
+	//delete[] photo;
+}
+
+const char * Photo::getPhoto() const
+{
+	if (m_name!=nullptr) {
+		return m_name;
+	}
+	else {
+		std::cout << "The photo file name is not specified." << std::endl;
+	}
+}
+
+bool Photo::isValidName(char * namePhoto)
 {
 	//Валидация на името на снимката.
 	unsigned lenNamePhoto = strlen(namePhoto);
@@ -48,7 +74,7 @@ void Photo::setPhoto(char * namePhoto)
 	char* photo = new(std::nothrow) char[lenNamePhoto + 1];
 	if (photo == nullptr) {
 		std::cout << "Not enought memory for photo. Error!" << std::endl;
-		return;
+		return false;
 	}
 	strcpy(photo, namePhoto);
 
@@ -60,19 +86,20 @@ void Photo::setPhoto(char * namePhoto)
 		++counter;
 		++photo;
 	}
-	
+
 	//Намиране дължината на разширението.
 	unsigned lenExtention = lenNamePhoto - pointPosition;
-	
+
 	char* ext = new(std::nothrow) char[lenExtention];
 	if (ext == nullptr) {
 		std::cout << "Not enought memory for extention. Error!" << std::endl;
-		return;
+		return false;
 	}
-	for (int i = 0; i < lenExtention;++i) {
-		ext[i] = namePhoto[i + pointPosition+1];
+	for (int i = 0; i < lenExtention; ++i) {
+		ext[i] = namePhoto[i + pointPosition + 1];
 	}
 
+	std::cout << "Extension is: " << ext << std::endl;
 	//Проверка дали името е коректно.
 
 	//ПРоверка дали разширението на файла е от разрешените.
@@ -80,22 +107,14 @@ void Photo::setPhoto(char * namePhoto)
 		m_name = new(std::nothrow) char[lenNamePhoto + 1];
 		if (m_name == nullptr) {
 			std::cout << "Not enought memory for set name of photo. Error!" << std::endl;
-			return;
+			return false;
 		}
-		strcpy(m_name, namePhoto);
+		return true;
 	}
 	else {
 		std::cout << "Invalid extesion." << std::endl;
-		m_name = nullptr;
+		return false;
 	}
-	//delete[] photo;
-	
-
-}
-
-char * Photo::getPhoto() const
-{
-	return m_name;
 }
 
 void Photo::serialize(std::ofstream & ofs) const
@@ -136,6 +155,11 @@ void Photo::deserialize(std::ifstream & ifs)
 		return;
 	}
 
+}
+
+bool Photo::isValidPhotoCreated() const
+{
+	return isCorrectPhotoCreate;
 }
 
 void Photo::copyFrom(const Photo & other)
