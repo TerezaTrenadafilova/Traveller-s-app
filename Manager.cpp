@@ -106,21 +106,6 @@ void Manager::open(char * fileName)
 			m_users[i].memoryAllocTravelInfo();
 		}
 
-		std::cout << "open: " << std::endl;
-		std::cout << m_numberOfUsers << ", " << m_capacityOfUsers << std::endl;
-
-		for (int i = 0; i < m_numberOfUsers; ++i) {
-			std::cout << m_users[i].getUserName() << ", " << m_users[i].getPassword() << ", " << m_users[i].getEmail() << std::endl;
-		}
-
-		/*if (ifs.good()) {
-			std::cout << "Successfully opened " << fileName << std::endl << std::endl;
-			printUser();
-		}
-		else {
-			std::cout << fileName << " is not open." << std::endl << std::endl;
-		}
-		ifs.*/
 	}
 	if (strcmp(fileName, "Destinations.db") == 0) {
 		if (m_nameFile != nullptr) {
@@ -160,7 +145,10 @@ void Manager::closeFile()
 		return;
 	}
 
-	cleanMemory();
+	if (strcmp(m_nameFile, "User.db") == 0 || strcmp(m_nameFile, "Destinations.db") == 0) {
+		cleanMemory();
+	}
+	
 	isSuccessfullyOpen = false;
 	m_nameFile = nullptr;
 	m_numberOfUsers = 0;//Текущият брой на потребителите се нулира.
@@ -461,59 +449,6 @@ void Manager::login()
 		std::cout << "Password: ";
 		std::cin.getline(password, MAX_LEN);
 
-		/*std::cout << "Email: ";
-		std::cin.getline(email, MAX_LEN);*/
-
-		//std::ifstream ifs("User.db", std::ios::in | std::ios::binary);
-		//if (!ifs.is_open()) {
-		//	std::cout << "File is not open in login. Error." << std::endl;
-		//	return;
-		//}
-		//unsigned count = 0;
-		//
-		////Прочитане на всички потретбители на приложението.
-		//ifs.read((char*)& count, sizeof(count));
-		//User *usersList = new(std::nothrow) User[count];
-		//if (usersList == nullptr) {
-		//	std::cout << "Error!" << std::endl;
-		//	return;
-		//}
-
-		//for (int i = 0; i < count; ++i) {
-		//	usersList[i].deserializeUsersDatabase(ifs);
-		//}
-
-		//ifs.close();
-
-		//for (int i = 0; i < count; ++i) {
-		//	//Търсене дали съществува такъв потребител.
-		//	if (strcmp(usersList[i].getUserName(), name) == 0 && strcmp(usersList[i].getPassword(), password) == 0 )
-		//	{
-		//		isLoggedIn = true;
-		//		std::cout << "Welcome " << name << " !" << std::endl;
-		//		
-		//		char* userDataBase = new(std::nothrow)char[strlen(name) + strlen(extDataBase) + 1];
-		//		if (userDataBase == nullptr) {
-		//			std::cout << std::endl << "Not enought memory for userDataBase in login(). Error!" << std::endl;
-		//			return;
-		//		}
-		//		strcpy(userDataBase, name);
-		//		strcat(userDataBase, extDataBase);
-		//		std::cout << " user data base is: " << userDataBase << std::endl;
-
-		//		//Отваряне на личната база данни на потребителя. Тя ще бъде празна, защото потребителят е нов.
-		//		ifs.open(userDataBase, std::ios::binary | std::ios::in);
-		//		if (!ifs.is_open()) {
-		//			std::cout << userDataBase << " is not opened. Error!" << std::endl << std::endl;
-		//		}
-
-		//		//Прочитане на личната база данни на потребителя.
-		//		usersList[i].deserializePersonalDataBase(ifs);
-		//		ifs.close();
-
-		//	}
-		//}
-
 		if (isUserExist(name, password) == true) {
 			isLoggedIn = true;
 			 posLoggedUser = posOfUser(name, password);
@@ -527,7 +462,7 @@ void Manager::login()
 			}
 			strcpy(userDataBase, name);
 			strcat(userDataBase, extDataBase);
-			std::cout << " user data base is: " << userDataBase << std::endl;
+			//std::cout << " user data base is: " << userDataBase << std::endl;
 
 			//Отваряне на личната база данни на потребителя. Тя ще бъде празна, защото потребителят е нов.
 			std::ifstream ifs;
@@ -546,8 +481,8 @@ void Manager::login()
 			}
 			else {
 				std::cout << "Private database is empty." << std::endl << std::endl;
-				std::cout << "Pos logged user: " << posLoggedUser << std::endl
-					<< m_users[posLoggedUser].getNumberOfFriends() << ", " << m_users[posLoggedUser].getNumberOfTravels() << std::endl;
+				//std::cout << "Pos logged user: " << posLoggedUser << std::endl
+				//	<< m_users[posLoggedUser].getNumberOfFriends() << ", " << m_users[posLoggedUser].getNumberOfTravels() << std::endl;
 			}
 
 			//Работа с m_nameFile
@@ -558,7 +493,7 @@ void Manager::login()
 			
 		}
 		if (isLoggedIn == false) {
-			std::cout << "Uncorrect username/password." << std::endl;
+			std::cout << "Uncorrect username/password or or the user database is not open (User.db). Try again." << std::endl;
 		}
 	}
 	else {
@@ -604,24 +539,6 @@ void Manager::registrerNewUser()
 	}
 	m_users[m_numberOfUsers] = newUser;
 	++m_numberOfUsers;
-
-	/*char* userDataBase = new(std::nothrow) char[strlen(name) + strlen(extDataBase) + 1];
-	if (userDataBase == nullptr) {
-		std::cout << "Not enought memory for userDataBase in registrerNewUser(). Error!" << std::endl;
-		return;
-	}
-	strcpy(userDataBase, name);
-	strcat(userDataBase, extDataBase);
-	std::cout << "User data base is: " << userDataBase << std::endl;*/
-
-	//Личната база данни се отваря, когато потребетелят се впише (в login()).
-	/*std::ifstream ifs(userDataBase, std::ios::binary | std::ios::in);
-	if (!ifs.is_open()) {
-		std::cout << userDataBase << " is not open. Error!" << std::endl << std::endl;
-		return;
-	}
-
-	setM_NameFile(userDataBase);*/
 
 }
 
@@ -782,19 +699,16 @@ void Manager::addDestination(const TravelInformation & newTravel)
 {
 	m_users[posLoggedUser].addNewTravel(newTravel);
 	std::cout << std::endl << "You added new travel. " << std::endl << std::endl;
-
-	//Увеличаване брой на дустинациите.
-	//++m_numberOfDestinations;
 	
-	std::cout << "Number of destination: " << m_numberOfDestinations << std::endl;
+//	std::cout << "Number of destination: " << m_numberOfDestinations << std::endl;
 
 	for (int i = 0; i < m_numberOfDestinations; ++i) {
 		
-		std::cout << "In for cycle in  addDestinations()" << std::endl;
+	//	std::cout << "In for cycle in  addDestinations()" << std::endl;
 		
 		//Ако вече съществува такава дестинация в програмата.
 		if (strcmp( m_destinations[i].getDestination(), newTravel.getDestination()) == 0) {
-			std::cout << "In if in for: " << std::endl;
+			//std::cout << "In if in for: " << std::endl;
 			//Увеличавене броя на посещениеята с 1.
 			unsigned numberVisit = m_destinations[i].getNumberOfVisits() + 1;
 			m_destinations[i].setNumberOfVisits(numberVisit);
@@ -802,7 +716,7 @@ void Manager::addDestination(const TravelInformation & newTravel)
 			//Промяна на сумата от всички оценки на дестинацията.
 			unsigned sumAll = m_destinations[i].getSumOfALL() + newTravel.getEvaluation();
 			m_destinations[i].setSumOfAll(sumAll);
-			//m_destinations[i].addUser(m_users[posLoggedUser]);
+			m_destinations[i].addUser(m_users[posLoggedUser]);
 
 			return;
 		}
@@ -810,39 +724,19 @@ void Manager::addDestination(const TravelInformation & newTravel)
 	}
 
 	//Създаване на нова дестинация.
-	std::cout << "Create new destination: " << std::endl;
+	//std::cout << "Create new destination: " << std::endl;
 
 	if (m_numberOfDestinations >= m_capacityOfDestinations) {
 		resizeDestinationList();
 	}
 	unsigned countVisit = 1;//Първото посещение е направено от текущия потребител.
-	m_destinations[m_numberOfDestinations] = Destination(newTravel.getDestination(), countVisit);
+	m_destinations[m_numberOfDestinations] = Destination(newTravel.getDestination(), countVisit, startCapacity);
 	
 	m_destinations[m_numberOfDestinations].setNumberOfVisits(countVisit);
 	m_destinations[m_numberOfDestinations].setSumOfAll(newTravel.getEvaluation());
-	//m_destinations[m_numberOfDestinations].addUser(m_users[posLoggedUser]);
+	//m_destinations[m_numberOfDestinations].addUser(m_users[posLoggedUser]); //не работи.
 	++m_numberOfDestinations;
 
-
-
-	//if (m_numberOfDestinations >= m_capacityOfDestinations) {
-	//	resizeDestinationList();
-	//}
-	//char* name = new(std::nothrow) char[strlen(newTravel.getDestination()) + 1];
-	//if (name == nullptr) {
-	//	std::cout << "Error in addDestination() in Manager class." << std::endl << std::endl;
-	//	return;
-	//}
-	//strcpy(name, newTravel.getDestination());
-	//
-	//unsigned countVisit = 1; //тоест само посещението на потребителя
-
-	//Destination newDest(name, countVisit);
-	//newDest.addUser(m_users[posLoggedUser]);
-	//newDest.setSumOfAll(newTravel.getEvaluation());
-
-	//m_destinations[m_numberOfDestinations] = newDest;
-	//++m_numberOfDestinations;
 }
 
 void Manager::viewLoggedInUserTravels() const
@@ -1082,34 +976,36 @@ void Manager::runProgram()
 				std::cout << "Please enter your comment for this destination: ";
 				std::cin.getline(comment, lenComment);
 
-				//unsigned countOfPicture;
-				//std::cout << "How many photos will you upload?: ";
-				//std::cin >> countOfPicture;
+				unsigned countOfPicture;
+				std::cout << "How many photos will you upload?: ";
+				std::cin >> countOfPicture;
 
-				//Photo* photosFromDestination = new(std::nothrow) Photo[countOfPicture];
-				//if (photosFromDestination == nullptr) {
-				//	std::cout << "Not enought memory for photos in add destination body. Error!" << std::endl;
-				//	return;
-				//}
 
-				////Според http://www-it.fmi.uni-sofia.bg/ReDisInfo/courses/modules/module1/parts/module2/part1/lesson2.html
-				////името на файл не може да е по-дълго от 255 символа.
-				//unsigned const lenNameFile = 256;//255+1 за '\0'
-				//char namePhoto[lenNameFile];
-				//int i = 0;
-				//do {
-				//	std::cout << "Please enter the name of the photo file: ";
-				//	char buffer;
-				//	std::cin.get(buffer);
-				//	std::cin.getline(namePhoto, lenNameFile);
-				//	if (isValidPhoto(namePhoto) == true) {
-				//		photosFromDestination[i] = Photo(namePhoto);
-				//		++i;
-				//	}
-				//} while (i < countOfPicture);
+				Photo* photosFromDestination = new(std::nothrow) Photo[countOfPicture];
+				if (photosFromDestination == nullptr) {
+					std::cout << "Not enought memory for photos in add destination body. Error!" << std::endl;
+					return;
+				}
+
+				//Според http://www-it.fmi.uni-sofia.bg/ReDisInfo/courses/modules/module1/parts/module2/part1/lesson2.html
+				//името на файл не може да е по-дълго от 255 символа.
+				unsigned const lenNameFile = 256;//255+1 за '\0'
+				char namePhoto[lenNameFile];
+				int i = 0;
+				while (i < countOfPicture){
+					std::cout << "Please enter the name of the photo file: ";
+					char buffer;
+					std::cin.get(buffer);
+					std::cin.getline(namePhoto, lenNameFile);
+					Photo tempPhoto(namePhoto);
+					if (tempPhoto.isValidPhotoCreated()) {
+						photosFromDestination[i] = tempPhoto;
+						++i;
+					}
+				} 
 
 				//Това е невалдно пътуване потправи го. Намери грешката къде е. Най-вероятоно е в датата.
-				TravelInformation travelInfo(dest, dateArrival, dateDeparture, evaluation, comment/*, /*photosFromDestination*/);
+				TravelInformation travelInfo(dest, dateArrival, dateDeparture, evaluation, comment, photosFromDestination);
 				if (travelInfo.isCorrectTravelInfo() == true) {
 					std::cout << "New travel is correct. AddDestinations():" << std::endl;
 					addDestination(travelInfo);
@@ -1125,8 +1021,8 @@ void Manager::runProgram()
 			
 		}
 
-		if(m_nameFile!= nullptr)
-			std::cout << std::endl << "Last opened file name: " << m_nameFile << std::endl << std::endl;
+		/*if(m_nameFile!= nullptr)
+			std::cout << std::endl << "Last opened file name: " << m_nameFile << std::endl << std::endl;*/
 
 		
 	}

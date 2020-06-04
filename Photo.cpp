@@ -83,6 +83,10 @@ bool Photo::isValidName(char * namePhoto)
 		if (*photo == '.') {
 			pointPosition = counter;
 		}
+		if (!((*photo >= 'A' &&*photo <= 'Z') || (*photo >= 'a' &&*photo <= 'z') || *photo == '_' || *photo=='.')) {
+			std::cout << "Invalid name of picture file." << std::endl;
+			return false;
+		}
 		++counter;
 		++photo;
 	}
@@ -98,9 +102,6 @@ bool Photo::isValidName(char * namePhoto)
 	for (int i = 0; i < lenExtention; ++i) {
 		ext[i] = namePhoto[i + pointPosition + 1];
 	}
-
-	std::cout << "Extension is: " << ext << std::endl;
-	//Проверка дали името е коректно.
 
 	//ПРоверка дали разширението на файла е от разрешените.
 	if (strcmp(ext, EXTENSION_1) == 0 || strcmp(ext, EXTENSION_2) == 0) {
@@ -164,12 +165,5 @@ bool Photo::isValidPhotoCreated() const
 
 void Photo::copyFrom(const Photo & other)
 {
-	/*unsigned lenName = strlen(other.m_name);
-	m_name = new (std::nothrow) char[lenName + 1];
-	if (m_name == nullptr) {
-		std::cout << "Not enought memory for set photo's name." << std::endl;
-		return;
-	}
-	strcpy(m_name, other.m_name);*/
 	setPhoto(other.m_name);
 }

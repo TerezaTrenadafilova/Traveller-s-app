@@ -64,6 +64,7 @@ private:
 public:
 	//void freeMemory(User& );
 
+
 	void memoryAllocFriendsList();
 	void memoryAllocTravelInfo();
 

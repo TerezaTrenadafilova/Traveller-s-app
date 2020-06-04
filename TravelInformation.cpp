@@ -87,24 +87,58 @@ TravelInformation::~TravelInformation()
 
 void TravelInformation::copy(const TravelInformation & other)
 {
-//	setDestination(other.m_destination);
+	//	setDestination(other.m_destination);
 
-	setEvaluation(other.m_evaluation);
-	setComment(other.m_comment);
-	//setDateOfArrival(other.m_dateOfArrival);
-	//setDeteOfDeparture(other.m_dateOfDeparture);
-	m_dateOfArrival = other.m_dateOfArrival;//Провека за датите, изнесия в отделена функция.
+		//setEvaluation(other.m_evaluation);
+		//setComment(other.m_comment);
+		////setDateOfArrival(other.m_dateOfArrival);
+		////setDeteOfDeparture(other.m_dateOfDeparture);
+		//m_dateOfArrival = other.m_dateOfArrival;//Провека за датите, изнесия в отделена функция.
+		//m_dateOfDeparture = other.m_dateOfDeparture;
+
+		//m_photos = new(std::nothrow) Photo[other.m_capacityPhoto];
+		//if (m_photos == nullptr) {
+		//	std::cout << "Not enought memory for set photos." << std::endl;
+		//	return;
+		//}
+		//for (int i = 0; i < other.m_countPhoto; ++i) {
+		//	m_photos[i] = other.m_photos[i];
+		//}
+
+	if (m_destination != nullptr) {
+		delete m_destination;
+		m_destination = nullptr;
+	}
+	m_destination = other.m_destination;
+	m_dateOfArrival = other.m_dateOfArrival;
 	m_dateOfDeparture = other.m_dateOfDeparture;
+	m_evaluation = other.m_evaluation;
 
-	m_photos = new(std::nothrow) Photo[other.m_capacityPhoto];
-	if (m_photos == nullptr) {
-		std::cout << "Not enought memory for set photos." << std::endl;
+	if (m_comment != nullptr) {
+		delete[] m_comment;
+		m_comment = nullptr;
+	}
+	m_comment = new(std::nothrow) char[strlen(other.m_comment) + 1];
+	if (m_comment == nullptr) {
+		std::cout << "Not enought memory for comment in TravelInaformation::copy(). Error!" << std::endl;
 		return;
 	}
-	for (int i = 0; i < other.m_countPhoto; ++i) {
+	strcpy(m_comment, other.m_comment);
+
+	if (m_photos != nullptr) {
+		delete[]m_photos;
+		m_photos = nullptr;
+	}
+	m_capacityPhoto = other.m_capacityPhoto;
+	m_countPhoto = other.m_countPhoto;
+	m_photos = new(std::nothrow) Photo[other.m_capacityPhoto];
+	if (m_photos == nullptr) {
+		std::cout << "Not enought memory for photos in TravelInaformation::copy(). Error!" << std::endl;
+		return;
+	}
+	for (int i = 0; i < m_countPhoto; ++i) {
 		m_photos[i] = other.m_photos[i];
 	}
-
 }
 
 void TravelInformation::clean()
@@ -158,10 +192,6 @@ void TravelInformation::setEvaluation(unsigned evaluation)
 	
 	if (evaluation >= MIN_EVALUATION && evaluation <= MAX_EVALUATION) {
 		m_evaluation = evaluation;
-		
-		//Промяна на сумата от всички оценки за дадена дестинация.
-	//	unsigned change = m_destination.getSumOfALL() + m_evaluation;
-		//m_destination.setSumOfAll(change);
 		
 		unsigned change = m_destination->getSumOfALL() + m_evaluation;
 		m_destination->setSumOfAll(change);
@@ -248,11 +278,6 @@ void TravelInformation::setPhotos(Photo * photo)
 		m_photos[i] = photo[i];//Проверка дали всички снимки са  коректни. Помисли дали ти трабва?
 	}
 }
-
-//void TravelInformation::setPhotos(char ** photos)
-//{
-//	//TODO work;
-//}
 
 char * TravelInformation::getDestination() const
 {

@@ -11,6 +11,8 @@ Destination::Destination()
 	,m_users(nullptr), m_numberOfUsers(0), m_capacityOfUsers(Capacity)
 {
 	m_users = new(std::nothrow) User[m_capacityOfUsers];
+	//m_users->memoryAllocFriendsList();//За конструктора по подразбиране: заделяне на памет за списъка с приятели
+	//m_users->memoryAllocTravelInfo();//За конструктора по подразбиране: заделяне на памет за списъка с пътувания
 	if (m_users == nullptr) {
 		std::cout << "Not enought memory for users in destination constructor." << std::endl;
 		return;
@@ -25,10 +27,13 @@ Destination::Destination(char *name, unsigned number, unsigned sum, User* users,
 	setName(name);
 
 	m_users = new(std::nothrow) User[m_capacityOfUsers];
+	//m_users->memoryAllocFriendsList();//За конструктора по подразбиране: заделяне на памет за списъка с приятели
+	//m_users->memoryAllocTravelInfo();//За конструктора по подразбиране: заделяне на памет за списъка с пътувания
 	if (m_users == nullptr) {
 		std::cout << "Not enought memory for users.Error!" << std::endl;
 		return;
 	}
+	
 	for (int i = 0; i < m_numberOfUsers; ++i) {
 		m_users[i] = users[i];
 	}
