@@ -43,7 +43,7 @@ User::User(char *name , char *password, char *email)
 	setPassword(password);
 	setEmail(email);
 	
-	m_friendsList = new(std::nothrow) User[m_capacityFriends];
+	/*m_friendsList = new(std::nothrow) User[m_capacityFriends];
 	if (m_friendsList == nullptr) {
 		std::cout << "Not enought memory for friendsList in User(). Error!" << std::endl;
 		return;
@@ -53,7 +53,9 @@ User::User(char *name , char *password, char *email)
 	if (m_travels == nullptr) {
 		std::cout << "Not enought memory for travels in User(). Error!" << std::endl;
 		return;
-	}
+	}*/
+	memoryAllocFriendsList();
+	memoryAllocTravelInfo();
 }
 
 User::User(char * name, char *password, char *email
@@ -68,20 +70,22 @@ User::User(char * name, char *password, char *email
 	setEmail(email);
 	//setFriendsList(friends);
 
-	m_friendsList = new(std::nothrow) User[capacity];
+	/*m_friendsList = new(std::nothrow) User[capacity];
 	if (m_friendsList == nullptr) {
 		std::cout << "Not enought memory for friendsList in void User:: copy(...). Error!" << std::endl << std::endl;
 		return;
-	}
+	}*/
+	memoryAllocFriendsList();
 	for (int i = 0; i < m_numberOfFriends; ++i) {
 		m_friendsList[i] = friends[i];
 	}
 	
-	m_travels = new(std::nothrow) TravelInformation[capacityTravels];
+	/*m_travels = new(std::nothrow) TravelInformation[capacityTravels];
 	if (m_travels == nullptr) {
 		std::cout << "Not enought memory for travels. " << std::endl;
 		return;
-	}
+	}*/
+	memoryAllocTravelInfo();
 	for (int i = 0; i < countTravels; ++i) {
 		m_travels[i] = travels[i];
 	}
@@ -122,11 +126,12 @@ void User::copy(const User & other)
 		m_friendsList = nullptr;
 	}
 
-	m_friendsList = new(std::nothrow) User[other.m_capacityFriends];
+	/*m_friendsList = new(std::nothrow) User[other.m_capacityFriends];
 	if (m_friendsList == nullptr) {
 		std::cout << "Not enought memory for friendsList in void User:: copy(...). Error!" << std::endl << std::endl;
 		return;
-	}
+	}*/
+	memoryAllocFriendsList();
 
 	for (int i = 0; i < m_numberOfFriends; ++i) {
 		m_friendsList[i] = other.m_friendsList[i];
@@ -136,13 +141,16 @@ void User::copy(const User & other)
 		delete[] m_travels;
 		m_travels = nullptr;
 	}
-	m_travels = new(std::nothrow) TravelInformation[other.m_capacityTravels];
+	m_countTravels = other.m_countTravels;
+	m_capacityTravels = other.m_capacityTravels;
+
+	/*m_travels = new(std::nothrow) TravelInformation[other.m_capacityTravels];
 	if (m_travels == nullptr) {
 		std::cout << "Not enought memory in user's copy method." << std::endl;
 		return;
-	}
-	m_countTravels = other.m_countTravels;
-	m_capacityTravels = other.m_capacityTravels;
+	}*/
+	memoryAllocTravelInfo();
+	
 	for (int i = 0; i < other.m_countTravels; ++i) {
 		m_travels[i] = other.m_travels[i];
 	}

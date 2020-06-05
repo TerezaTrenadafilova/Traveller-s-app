@@ -454,7 +454,8 @@ void Manager::login()
 			 posLoggedUser = posOfUser(name, password);
 
 			std::cout <<std::endl<< "Welcome " << name << " !" << std::endl<<std::endl;
-					
+			
+			//Създавене на името за лчната база данни.
 			char* userDataBase = new(std::nothrow)char[strlen(name) + strlen(extDataBase) + 1];
 			if (userDataBase == nullptr) {
 				std::cout << std::endl << "Not enought memory for userDataBase in login(). Error!" << std::endl;
@@ -488,7 +489,7 @@ void Manager::login()
 			//Работа с m_nameFile
 			setM_NameFile(userDataBase);
 
-			//Променяне на името на последния влязъл потребител.
+			//Промяна на името на последния влязъл потребител.
 			setNameLastLoggedUser(name);
 			
 		}
@@ -756,6 +757,7 @@ void Manager::runProgram()
 		//Отваряне на нов файл.
 		if (strcmp(command, "open") == 0) {
 			char fileName[MAX_LEN * 10];//Умножавам по 10, защото е възможно да има по-дълго име на файл с над 50 елемента.
+			std::cout << "File name: ";
 			std::cin.getline(fileName, MAX_LEN * 10);
 
 			open(fileName);
@@ -827,7 +829,12 @@ void Manager::runProgram()
 
 		//Регистриране на нов потребител.
 		if (strcmp(command, "registration") == 0) {
-			registrerNewUser();
+			if (isLoggedIn == false) {
+				registrerNewUser();
+			}
+			else {
+				std::cout << std::endl << "There is already a registered user. Invalid operation. " << std::endl << std::endl;
+			}
 		}
 
 		//Изход.
@@ -880,7 +887,7 @@ void Manager::runProgram()
 		}
 
 		//Извеждане на всички дестинации, които е посетил приятел.
-		if (strcmp(command, "print all freind's destinations") == 0) {
+		if (strcmp(command, "print all friend's destinations") == 0) {
 			if (isSuccessfullyOpen == true && isLoggedIn == true) {
 				char nameFriend[MAX_LEN];
 
@@ -953,13 +960,13 @@ void Manager::runProgram()
 				Destination *dest = new (std::nothrow)Destination(nameDestination);
 
 				unsigned dayOfArrival, monthOfArrival, yearOfArrival;
-				std::cout << "Please enter the date of arrival in the  day / month / year format: ";
-				std::cin >> dayOfArrival >> monthOfArrival >> yearOfArrival;
+				std::cout << "Please enter arrival date in ISO 8601 form  (year / month / day): ";
+				std::cin >> yearOfArrival >> monthOfArrival >> dayOfArrival;
 				Date dateArrival(dayOfArrival, monthOfArrival, yearOfArrival);
 
 				unsigned dayOfDeparture, monthOfDeparture, yearOfDeparture;
-				std::cout << "Please enter the date of departure in the  day / month / year format: ";
-				std::cin >> dayOfDeparture >> monthOfDeparture >> yearOfDeparture;
+				std::cout << "Please enter deperture date in ISO 8601 form  (year / month / day): ";
+				std::cin >>  yearOfDeparture >> monthOfDeparture >>dayOfDeparture;
 				Date dateDeparture(dayOfDeparture, monthOfDeparture, yearOfDeparture);
 
 				unsigned evaluation;

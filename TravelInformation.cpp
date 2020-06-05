@@ -247,7 +247,7 @@ void TravelInformation::setComment(char * comment)
 
 void TravelInformation::setDates(const Date & dateA, const Date & dateD)
 {
-	if (dateA.getDay() <= dateD.getDay()) {
+	if (dateA.getDay() <= dateD.getDay() ){
 		if (dateA.getMonth() <= dateD.getMonth()) {
 			if (dateA.getYear() <= dateD.getYear()) {
 				m_dateOfArrival = dateA;
@@ -255,15 +255,41 @@ void TravelInformation::setDates(const Date & dateA, const Date & dateD)
 				isCorrectTravel = true;
 			}
 			else {
-				std::cout << "Inavilid dates." << std::endl;
+				std::cout << "Inavilid dates. In TravelInformation" << std::endl;
 			}
 		}
 		else {
-			std::cout << "Inavilid dates." << std::endl;
-		}
+			if (dateA.getYear() <= dateD.getYear()) {
+				m_dateOfArrival = dateA;
+				m_dateOfDeparture = dateD;
+				isCorrectTravel = true;
+			}
+			else {
+				std::cout << "Inavilid dates. In TravelInformation" << std::endl;
+			}
+		}			
 	}
 	else {
-		std::cout << "Inavilid dates." << std::endl;
+		if (dateA.getMonth() <= dateD.getMonth()) {
+			if (dateA.getYear() <= dateD.getYear()) {
+				m_dateOfArrival = dateA;
+				m_dateOfDeparture = dateD;
+				isCorrectTravel = true;
+			}
+			else {
+				std::cout << "Inavilid dates. In TravelInformation" << std::endl;
+			}
+		}
+		else {
+			if (dateA.getYear() <= dateD.getYear()) {
+				m_dateOfArrival = dateA;
+				m_dateOfDeparture = dateD;
+				isCorrectTravel = true;
+			}
+			else {
+				std::cout << "Inavilid dates. In TravelInformation" << std::endl;
+			}
+		}
 	}
 }
 

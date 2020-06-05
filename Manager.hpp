@@ -61,10 +61,10 @@ public:
 	//Проверка за дадена дестинация.
 	void checkDestination(char*);
 
-	//Добавяне на приятел.
-	void  addNewFriend(/*const User&*/ char*);
+	//Добавяне на приятел по въведено име.
+	void  addNewFriend( char*);
 
-	//Премахване на приятел.
+	//Премахване на приятел по въведено име.
 	void removeFriend(/*const User&*/ char*);
 
 	//Добавяне на дестинация.
@@ -84,7 +84,7 @@ private:
 	char* m_nameFile = nullptr;
 	void setM_NameFile(char*);
 
-	//ПРоменлива, която пази името на последния влязъл потребител.
+	//Променлива, която пази името на последния влязъл потребител.
 	char* nameLastLoggedUser = nullptr;
 	void setNameLastLoggedUser(char*);
 
