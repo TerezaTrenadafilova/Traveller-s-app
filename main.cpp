@@ -72,8 +72,5 @@ int main() {
 
 	//testMenagerClass();
 
-	
-
-	system("pause");
 	return 0;
 }

@@ -23,7 +23,7 @@ public:
 	void setPhoto(char*);
 
 	//Гетър.
-	const char* getPhoto()const;
+	char* getPhoto()const;
 
 	//Проверка дали името на файла е коректно.
 	bool isValidName(char*);

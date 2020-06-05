@@ -4,7 +4,7 @@
 #include "User.hpp"
 #include "Destination.hpp"
 
-//Класът ще има списък с потребители на пприложението.
+//Класът ще има списък с потребители на приложението.
 class Manager {
 private:
 	User * m_users;
@@ -40,6 +40,7 @@ public:
 	void save();
 	void saveas(char*);
 	void help()const;
+
 	//Вписване на потребител.
 	void login();
 	void logout();
@@ -65,7 +66,7 @@ public:
 	void  addNewFriend( char*);
 
 	//Премахване на приятел по въведено име.
-	void removeFriend(/*const User&*/ char*);
+	void removeFriend(char*);
 
 	//Добавяне на дестинация.
 	void addDestination(const TravelInformation&);

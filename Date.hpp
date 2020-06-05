@@ -32,6 +32,7 @@ public:
 
 	//Четене от бинарен файл.
 	void deserialize(std::ifstream&)const;
+
 };
 
 #endif

@@ -62,9 +62,6 @@ private:
 	void resizeTravelInfo();
 
 public:
-	//void freeMemory(User& );
-
-
 	void memoryAllocFriendsList();
 	void memoryAllocTravelInfo();
 

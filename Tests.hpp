@@ -78,6 +78,7 @@ void testDate() {
 
 void testDestination() {
 	Destination d("Sofia", 7, 25);
+
 	//Извеждане на общата оценка за дестинацията.
 	std::cout << "Average evaluation of destination is: " << std::setprecision(2) << d.getAverage() << std::endl;
 

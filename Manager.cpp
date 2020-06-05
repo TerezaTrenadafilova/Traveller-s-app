@@ -482,8 +482,6 @@ void Manager::login()
 			}
 			else {
 				std::cout << "Private database is empty." << std::endl << std::endl;
-				//std::cout << "Pos logged user: " << posLoggedUser << std::endl
-				//	<< m_users[posLoggedUser].getNumberOfFriends() << ", " << m_users[posLoggedUser].getNumberOfTravels() << std::endl;
 			}
 
 			//Работа с m_nameFile
@@ -583,10 +581,6 @@ void Manager::checkFriendDestination(char * friendName, char * destinationName)
 			//Намиране на позицията на приятеля в списъка с потребители на приложението.
 			int pos = posOfUserByName(friendName);
 
-			////Извеждане на информацията за всички пътуания на потребителя.
-			//std::cout << std::endl << friendName << " travels information: " << std::endl;
-			//m_users[pos].printTravelInformation();
-
 			//Проверка дали потребителя е посетил дестинацията.
 			if (m_users[pos].isVisitDestination(destinationName) == true) {
 				m_users[pos].printDestinationInfoByName(destinationName);
@@ -652,7 +646,7 @@ void Manager::checkDestination(char * dest)
 	m_destinations[pos].printUserWhoVisitedDestination();
 }
 
-void Manager::addNewFriend(/*const User & newFriend*/char* nameFriend)
+void Manager::addNewFriend(char* nameFriend)
 {	
 	if (isUsed(nameFriend) == true) {
 		//Проверка дали името не е на текущо влезлият потребител.
@@ -679,7 +673,7 @@ void Manager::addNewFriend(/*const User & newFriend*/char* nameFriend)
 	}
 }
 
-void Manager::removeFriend(/*const User & adversary*/char*  nameFriend)
+void Manager::removeFriend(char*  nameFriend)
 {
 	if (isUsed(nameFriend) == true) {
 		//Намиране на позицията на проителя с даденото име.
@@ -725,7 +719,6 @@ void Manager::addDestination(const TravelInformation & newTravel)
 	}
 
 	//Създаване на нова дестинация.
-	//std::cout << "Create new destination: " << std::endl;
 
 	if (m_numberOfDestinations >= m_capacityOfDestinations) {
 		resizeDestinationList();
@@ -845,9 +838,8 @@ void Manager::runProgram()
 
 		//Извеждане на всички потребители.
 		if (strcmp(command, "print users") == 0) {
-			//if (isSuccessfullyOpen == true || isLoggedIn == true) {
-				printUser();
-		//	}
+			printUser();
+		
 		}
 
 		//Изваеждане на всички дестинации.

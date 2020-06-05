@@ -10,15 +10,6 @@ User::User()
 	, m_friendsList(nullptr),m_numberOfFriends(0),m_capacityFriends(startCapacity)
 	,m_travels(nullptr), m_countTravels(0), m_capacityTravels(startCapacity)
 {
-	/*m_userName = nullptr;
-	m_password = nullptr;
-	m_email = nullptr;
-	m_numberOfFriends = 0;
-	m_capacityFriends = startCapacity;
-	m_travels = nullptr;
-	m_countTravels = 0;
-	m_capacityTravels = startCapacity;*/
-
 	/*m_friendsList = new(std::nothrow) User[m_capacityFriends];
 	if (m_friendsList == nullptr) {
 		std::cout << "Not enought memory for friendsList in User(). Error!" << std::endl;
@@ -43,17 +34,6 @@ User::User(char *name , char *password, char *email)
 	setPassword(password);
 	setEmail(email);
 	
-	/*m_friendsList = new(std::nothrow) User[m_capacityFriends];
-	if (m_friendsList == nullptr) {
-		std::cout << "Not enought memory for friendsList in User(). Error!" << std::endl;
-		return;
-	}
-
-	m_travels = new(std::nothrow) TravelInformation[m_capacityTravels];
-	if (m_travels == nullptr) {
-		std::cout << "Not enought memory for travels in User(). Error!" << std::endl;
-		return;
-	}*/
 	memoryAllocFriendsList();
 	memoryAllocTravelInfo();
 }
@@ -310,7 +290,7 @@ void User::setFriendsList(User* friends)
 	unsigned size = friends->getNumberOfFriends();
 	m_friendsList = new(std::nothrow) User[size];
 
-	//ПРоверка дали е заделена паметта.
+	//Проверка дали е заделена паметта.
 	if (m_friendsList == nullptr) {
 		std::cout << "Not enought memory for set friendsList. Error!" << std::endl;
 		return;
@@ -573,9 +553,7 @@ void User::addNewTravel(const TravelInformation & newTravel)
 		//std::cout << "In if" << std::endl;
 		resizeTravelInfo();
 	}
-//	std::cout << "count of travels: " << m_countTravels << std::endl;
-	//std::cout << "New travel info: " << newTravel.getDestination() << ", " << newTravel.getComment() << std::endl;
-	
+
 	m_travels[m_countTravels] = newTravel;
 	
 	m_travels[m_countTravels].print();

@@ -145,6 +145,7 @@ void Date::serialize(std::ofstream & ofs) const
 	else {
 		std::cout << "Serialize failed. Error! " << std::endl;
 	}*/
+
 }
 
 void Date::deserialize(std::ifstream & ifs) const

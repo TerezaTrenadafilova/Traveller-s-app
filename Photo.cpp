@@ -53,7 +53,7 @@ void Photo::setPhoto(char * namePhoto)
 	//delete[] photo;
 }
 
-const char * Photo::getPhoto() const
+ char * Photo::getPhoto() const
 {
 	if (m_name!=nullptr) {
 		return m_name;
