@@ -2,12 +2,7 @@
 
 #include"Date.hpp"
 
-const unsigned NUMBER_DAYS_FULL_MONTH = 31;
-const unsigned NUMBER_OF_DAYS_FEBR = 28;
-const unsigned NUMBER_OF_DAYS_ANOTHER_MONTH = 30;
-const unsigned NUMBER_OF_MONTHS = 12;
-const unsigned MIN_YEAR = 1900;
-const unsigned TEMP_YEAR = 2020;
+
 
 bool Date::isLeapYear(unsigned year)
 {

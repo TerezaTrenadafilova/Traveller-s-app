@@ -5,11 +5,20 @@
 
 class Date {
 private:
+	//Член-данни
 	unsigned m_day;
 	unsigned m_month;
 	unsigned m_year;
 
 	bool isLeapYear(unsigned);
+
+	//Константи
+	static const unsigned NUMBER_DAYS_FULL_MONTH = 31;
+	static const unsigned NUMBER_OF_DAYS_FEBR = 28;
+	static const unsigned NUMBER_OF_DAYS_ANOTHER_MONTH = 30;
+	static const unsigned NUMBER_OF_MONTHS = 12;
+	static const unsigned MIN_YEAR = 1900;
+	static const unsigned TEMP_YEAR = 2020;
 
 public:
 	Date(unsigned = 1, unsigned = 1, unsigned = 1900);
